@@ -408,12 +408,14 @@ public class StateObservationMulti {
   protected void fireMissile(int playerId) {
     // need all the usual missile firing code here
     Ship currentShip = this.avatars[playerId];
-    Missile m = new Missile(playerId, this.avatars[playerId].getPosition(), new Vector2d(0, 0));
-    m.setVelocityByDir(this.avatars[playerId].getDirection());
-    m.setPlayerId(playerId);
-    m.getPosition().add(m.velocity, (currentShip.getRadius()+m.getRadius())*1.5 / m.velocity.mag());
-    this.objects.add(m);
-    this.avatars[playerId].fireWeapon(Constants.WEAPON_ID_MISSILE);
+    if (currentShip.resources.get(Constants.WEAPON_ID_MISSILE) > 0) {
+      Missile m = new Missile(playerId, this.avatars[playerId].getPosition(), new Vector2d(0, 0));
+      m.setVelocityByDir(this.avatars[playerId].getDirection());
+      m.setPlayerId(playerId);
+      m.getPosition().add(m.velocity, (currentShip.getRadius() + m.getRadius()) * 1.5 / m.velocity.mag());
+      this.objects.add(m);
+      this.avatars[playerId].fireWeapon(Constants.WEAPON_ID_MISSILE);
+    }
   }
 
   public void sleep() {

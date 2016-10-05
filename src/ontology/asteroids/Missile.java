@@ -32,6 +32,14 @@ public class Missile extends Weapon {
   }
 
   @Override
+  public void update() {
+    if (!isDead()) {
+      pos.add(velocity);
+      ttl--;
+    }
+  }
+
+  @Override
   public void setRadius() {
     this.radius = Constants.MISSILE_RADIUS;
   }

@@ -23,7 +23,10 @@ public class GameTest {
 
   static String doNothingController = "controllers.doNothing.Agent";
   static String olmctsController = "controllers.sampleOLMCTS.Agent";
-  static String human = "controllers.humanWSAD.Agent";
+  static String humanArrows = "controllers.humanArrows.Agent";
+  static String humanWSAD = "controllers.humanWSAD.Agent";
+  static String randomController = "controllers.sampleRandom.Agent";
+
 
   public static void main(String[] args) {
     playOne();
@@ -34,9 +37,9 @@ public class GameTest {
     boolean visuals = true;
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
-    players[0] = createController(doNothingController, 0, game);
-    players[1] = createOLMCTSController(0, game);
-   // players[1] = createController(human, 1 , game);
+    players[0] = createController(humanArrows, 0, game);
+    //players[1] = createOLMCTSController(0, game);
+    players[1] = createController(randomController, 1 , game);
 
     double[][] res = game.playGame(players, 3);
   }

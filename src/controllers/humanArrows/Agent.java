@@ -1,4 +1,4 @@
-package controllers.humanWSAD;
+package controllers.humanArrows;
 
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
@@ -46,16 +46,16 @@ public class Agent extends AbstractMultiPlayer implements KeyListener {
   public void keyPressed(KeyEvent e) {
     int key = e.getKeyCode();
     switch (key) {
-      case KeyEvent.VK_W :
+      case KeyEvent.VK_UP :
         action = Types.ACTIONS.ACTION_THRUST;
         break;
-      case KeyEvent.VK_A :
+      case KeyEvent.VK_LEFT :
         action = Types.ACTIONS.ACTION_LEFT;
         break;
-      case KeyEvent.VK_D :
+      case KeyEvent.VK_RIGHT :
         action = Types.ACTIONS.ACTION_RIGHT;
         break;
-      case KeyEvent.VK_SPACE :
+      case KeyEvent.VK_ENTER :
         action = Types.ACTIONS.ACTION_FIRE;
         break;
       default:
@@ -66,16 +66,16 @@ public class Agent extends AbstractMultiPlayer implements KeyListener {
 
   public void keyReleased(KeyEvent e) {
     int key = e.getKeyCode();
-    if (key == KeyEvent.VK_W) {
+    if (key == KeyEvent.VK_UP) {
       action = Types.ACTIONS.ACTION_NIL;
     }
-    if (key == KeyEvent.VK_A) {
+    if (key == KeyEvent.VK_LEFT) {
       action = Types.ACTIONS.ACTION_NIL;
     }
-    if (key == KeyEvent.VK_D) {
+    if (key == KeyEvent.VK_RIGHT) {
       action = Types.ACTIONS.ACTION_NIL;
     }
-    if (key == KeyEvent.VK_SPACE) {
+    if (key == KeyEvent.VK_ENTER) {
       action = Types.ACTIONS.ACTION_NIL;
     }
   }

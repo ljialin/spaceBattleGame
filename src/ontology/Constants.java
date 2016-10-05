@@ -18,11 +18,11 @@ public class Constants {
   public static final double THRUST_SPEED = 1.0;
 
   public static final int WEAPON_ID_MISSILE = 1;
-  public static final int MISSILE_MAX_RESOURCE = 10;
+  public static final int MISSILE_MAX_RESOURCE = 10000;
   public static final int MISSILE_COST = 10;
   public static final double MISSILE_RADIUS = 1.0;
-  public static final int MISSILE_MAX_TTL = 20;
-  public static final int MISSILE_MAX_SPEED = 3;
+  public static final int MISSILE_MAX_TTL = 200;
+  public static final int MISSILE_MAX_SPEED = 2;
   public static final int MISSILE_DESTRUCTIVE_POWER = 1;
 
   public static final double GRAVITY = 0;
