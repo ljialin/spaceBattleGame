@@ -1,8 +1,11 @@
 package ontology.asteroids;
 
+import com.sun.javafx.util.Utils;
 import core.player.Player;
 import ontology.Constants;
 import ontology.Types;
+import ontology.physics.ForcePhysics;
+import ontology.physics.GravityPhysics;
 import ontology.physics.RotationPhysics;
 import tools.KeyHandler;
 import tools.KeyInput;
@@ -31,40 +34,109 @@ public class Ship extends GameObject {
   public ArrayList<Types.ACTIONS> actionsNIL;
   public TreeMap<Integer, Integer> resources;
   public Player player;
-  public int playerId;
 
-  private double score = 0.0;
-  private Types.WINNER winState = Types.WINNER.NO_WINNER;
+  private double score;
+  private Types.WINNER winState;
   private KeyHandler ki;
 
   /** define the shape of the ship */
-  static int[] xp = {-Constants.SHIP_SIZE, 0, Constants.SHIP_SIZE, 0};
-  static int[] yp = {Constants.SHIP_SIZE, -Constants.SHIP_SIZE, Constants.SHIP_SIZE, 0};
+  static int[] xp = {-Constants.SHIP_RADIUS, 0, Constants.SHIP_RADIUS, 0};
+  static int[] yp = {Constants.SHIP_RADIUS, -Constants.SHIP_RADIUS, Constants.SHIP_RADIUS, 0};
   /** the thrust poly that will be drawn when the ship is thrusting */
-  static int[] xpThrust =  {-Constants.SHIP_SIZE, 0, Constants.SHIP_SIZE, 0};
-  static int[] ypThrust = {Constants.SHIP_SIZE, Constants.SHIP_SIZE+1, Constants.SHIP_SIZE, 0};
+  static int[] xpThrust =  {-Constants.SHIP_RADIUS, 0, Constants.SHIP_RADIUS, 0};
+  static int[] ypThrust = {Constants.SHIP_RADIUS, Constants.SHIP_RADIUS+1, Constants.SHIP_RADIUS, 0};
 
-  public Ship() {
-    reset();
+  /**
+   * Constructor
+   */
+  public Ship(Vector2d pos, Vector2d dir, int playerId) {
+    super(pos);
+    this.dir = dir;
+    this.velocity = new Vector2d();
+    this.playerId = playerId;
+    setParam();
   }
 
-  public Ship(Vector2d _pos, Vector2d _dir, Vector2d _velocity) {
-    super(_pos);
-    this.pos = _pos;
-    this.velocity = _velocity;
-    this.thrusting = false;
+  public Ship(Vector2d pos, Vector2d dir, Vector2d velocity, int playerId) {
+    this(pos, dir, playerId);
+    this.velocity = velocity;
   }
+
 
   public void reset() {
     this.pos.set(Constants.WIDTH / 2, Constants.WIDTH / 2);
-    this.velocity.zero();
     this.dir.set(0, -1);
-    this.dead = false;
+    this.velocity.zero();
+    setParam();
+  }
+
+  public void setParam() {
+    this.radius = Constants.SHIP_RADIUS;
     this.thrusting = false;
+    this.healthPoints = Constants.MAX_HEALTH_POINTS;
+    this.winState = Types.WINNER.NO_WINNER;
+    this.color = Types.PLAYER_COLOR[playerId];
+    this.score = 0.0;
+    this.destructivePower = Constants.MAX_HEALTH_POINTS;
+  }
+
+  public void update(Types.ACTIONS action) {
+    switch (action) {
+      case ACTION_THRUST:
+        ForcePhysics.thrust(velocity, dir);
+        break;
+      case ACTION_LEFT:
+        RotationPhysics.steer(dir, -1.0);
+        break;
+      case ACTION_RIGHT:
+        RotationPhysics.steer(dir, 1.0);
+        break;
+      case ACTION_FIRE:
+        ForcePhysics.repulse(pos, dir, false);
+        break;
+      case ACTION_NIL:
+        break;
+      default:
+        break;
+    }
+
+    GravityPhysics.gravity(pos, velocity);
+
+    velocity.x = Utils.clamp(velocity.x, -Constants.SHIP_MAX_SPEED,
+        Constants.SHIP_MAX_SPEED);
+    velocity.y = Utils.clamp(velocity.y, -Constants.SHIP_MAX_SPEED,
+        Constants.SHIP_MAX_SPEED);
+
+    pos.add(velocity);
+  }
+
+  public double dotTo(Ship other)
+  {
+    Vector2d diff = Vector2d.subtract(other.pos,this.pos);
+    Vector2d front = new Vector2d(this.dir);
+    front.normalise();
+    diff.normalise();
+    return diff.dot(front);
+  }
+
+  public double dotDirections(Ship other)
+  {
+    Vector2d thisFront = new Vector2d(this.dir);
+    Vector2d otherFront = new Vector2d(other.dir);
+    thisFront.normalise();
+    otherFront.normalise();
+    return thisFront.dot(otherFront);
+  }
+
+  public double distTo(Ship other)
+  {
+    Vector2d diff = Vector2d.subtract(other.pos, this.pos);
+    return diff.mag();
   }
 
   public Rectangle2D getBound() {
-    return new Rectangle2D.Double(pos.x,pos.y,Double.valueOf(xp[2]-xp[0]),Double.valueOf(yp[0]-yp[1]));
+    return new Rectangle2D.Double(pos.x, pos.y,
+        Double.valueOf(xp[2]-xp[0]), Double.valueOf(yp[0]-yp[1]));
   }
 
   public Vector2d getDirection() {
@@ -83,16 +155,12 @@ public class Ship extends GameObject {
     return winState;
   }
 
+  public void setWinState(Types.WINNER winner) {
+    this.winState = winner;
+  }
+
   public double getScore() {
     return score;
-  }
-
-  public int getPlayerId() {
-    return playerId;
-  }
-
-  public void setPlayerId(int _playerId) {
-    this.playerId = _playerId;
   }
 
   public void setPlayer(Player _player) {
@@ -116,17 +184,18 @@ public class Ship extends GameObject {
 
   @Override
   public Ship copy() {
-    Ship cloneShip = new Ship(pos, dir, velocity);
+    Ship cloneShip = new Ship(pos, dir, velocity, playerId);
     return cloneShip;
   }
 
   @Override
   public void update() {
-
+    throw new IllegalArgumentException("You shouldn't be calling this...");
   }
 
   @Override
   public void draw(Graphics2D g) {
+    color = Types.PLAYER_COLOR[playerId];
     AffineTransform at = g.getTransform();
     g.translate(pos.x, pos.y);
     double rot = RotationPhysics.rotate(dir);

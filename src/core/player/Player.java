@@ -1,6 +1,6 @@
 package core.player;
 
-import core.game.StateObservation;
+import core.game.StateObservationMulti;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
@@ -59,7 +59,7 @@ public abstract class Player {
    * @param elapsedTimer Timer when the action returned is due.
    * @return An action for the current state
    */
-  public abstract Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer);
+  public abstract Types.ACTIONS act(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer);
 
   /**
    * Function called when the game is over. This method must finish before CompetitionParameters.TEAR_DOWN_TIME,
@@ -67,7 +67,7 @@ public abstract class Player {
    * @param stateObs the game state at the end of the game
    * @param elapsedCpuTimer timer when this method is meant to finish.
    */
-  public void result(StateObservation stateObs, ElapsedCpuTimer elapsedCpuTimer)
+  public void result(StateObservationMulti stateObs, ElapsedCpuTimer elapsedCpuTimer)
   {
   }
 

@@ -1,5 +1,6 @@
 package ontology.physics;
 
+import ontology.Constants;
 import tools.Vector2d;
 
 /**
@@ -12,13 +13,16 @@ import tools.Vector2d;
  */
 public class RotationPhysics {
 
-  public static double rotate(Vector2d v) {
-    double rot = Math.atan2(v.y, v.x) + Math.PI / 2;
-    return rot;
-  }
-
   public static double rotate(double x, double y) {
     double rot = Math.atan2(y, x) + Math.PI / 2;
     return rot;
+  }
+
+  public static double rotate(Vector2d v) {
+    return rotate(v.x, v.y);
+  }
+
+  public static void steer(Vector2d dir, double angle) {
+    dir.rotate(angle* Constants.RADIAN_UNIT);
   }
 }

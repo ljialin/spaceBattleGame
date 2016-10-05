@@ -4,6 +4,7 @@ import competition.CompetitionParameters;
 import controllers.doNothing.Agent;
 import core.game.Game;
 import core.game.StateObservation;
+import core.game.StateObservationMulti;
 import core.player.Player;
 import ontology.asteroids.View;
 import tools.ElapsedCpuTimer;
@@ -29,14 +30,17 @@ public class SampleTest {
   public static void playOne(int ply1, int ply2)
   {
     boolean visuals = true;
-    Game battle = new Game();
-    Player p1 = createPlayer(doNothingController, game, 3, false);
-    Player p2 = createPlayer(ply2);
+    StateObservationMulti game = new StateObservationMulti();
+    Player[] players = new Player[2];
+    ElapsedCpuTimer elapsedTimer = new ElapsedCpuTimer();
+    elapsedTimer.setMaxTimeMillis(CompetitionParameters.ACTION_TIME);
+    Player[0] = createPlayer("", game, 3, false);
+    Player[1] = createPlayer(new controllers.doNothing.Agent(game, elapsedTimer, 1), game,);
 
-    double []res = battle.createPlayer(p1, p2);
+    double[] res = game.playGame(players, 1);
   }
 
-  private static Player createPlayer(String playerName, StateObservation so,
+  private static Player createPlayer(String playerName, StateObservationMulti so,
                                      int randomSeed, boolean isHuman)
   {
     Player player = null;
@@ -59,7 +63,8 @@ public class SampleTest {
     return player;
   }
 
-  protected static Player createController(String playerName, int playerID, StateObservation so) throws RuntimeException
+  protected static Player createController(String playerName, int playerID,
+                                           StateObservationMulti so) throws RuntimeException
   {
     Player player = null;
     try
@@ -70,7 +75,7 @@ public class SampleTest {
       if (so.getNoPlayers() < 2) { //single player
         //Get the class and the constructor with arguments (StateObservation, long).
         Class<? extends Player> controllerClass = Class.forName(playerName).asSubclass(Player.class);
-        Class[] gameArgClass = new Class[]{StateObservation.class, ElapsedCpuTimer.class};
+        Class[] gameArgClass = new Class[]{StateObservationMulti.class, ElapsedCpuTimer.class};
         Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
 
         //Call the constructor with the appropriate parameters.
@@ -82,11 +87,11 @@ public class SampleTest {
       } else { //multi player
         //Get the class and the constructor with arguments (StateObservation, long, int).
         Class<? extends Player> controllerClass = Class.forName(playerName).asSubclass(Player.class);
-        Class[] gameArgClass = new Class[]{StateObservation.class, ElapsedCpuTimer.class, int.class};
+        Class[] gameArgClass = new Class[]{StateObservationMulti.class, ElapsedCpuTimer.class, int.class};
         Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
 
         //Call the constructor with the appropriate parameters.
-        Object[] constructorArgs = new Object[]{(StateObservation)so.copy(), ect.copy(), playerID};
+        Object[] constructorArgs = new Object[]{(StateObservationMulti)so.copy(), ect.copy(), playerID};
 
         player = (Player) controllerArgsConstructor.newInstance(constructorArgs);
         player.setPlayerID(playerID);

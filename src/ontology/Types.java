@@ -41,14 +41,20 @@ public class Types {
   public static final Vector2d THRUST = new Vector2d(0, 1);
   public static final Vector2d RIGHT = new Vector2d(1, 0);
   public static final Vector2d LEFT = new Vector2d(-1, 0);
-  public static final Vector2d[] BASE_DIRS = new Vector2d[]{THRUST, LEFT, RIGHT};
+  public static final Vector2d FIRE = new Vector2d(0, 0);
+  public static final Vector2d[] BASE_DIRS = new Vector2d[]{THRUST, LEFT, RIGHT, FIRE};
 
 
   public static final Direction DNIL = new Direction(0, 0);
   public static final Direction DRIGHT = new Direction(1, 0);
   public static final Direction DLEFT = new Direction(-1, 0);
   public static final Direction DTHRUST = new Direction(0, 1);
-  public static final Direction[] DBASEDIRS = new Direction[]{DTHRUST, DLEFT, DRIGHT};
+  public static final Direction DFIRE = new Direction(0, 0);
+  public static final Direction[] DBASEDIRS = new Direction[]{DTHRUST, DLEFT, DRIGHT, DFIRE};
+
+  public static Color[] PLAYER_COLOR = new Color[]{
+      BLUE, GREEN, ORANGE, PINK
+  };
 
   public static int[][] ALL_ACTIONS = new int[][]{
     {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SPACE, KeyEvent.VK_ESCAPE},
@@ -81,16 +87,6 @@ public class Types {
       else if (strKey.equalsIgnoreCase("ACTION_ESCAPE")) return ACTION_ESCAPE;
       else return ACTION_NIL;
     }
-
-    public static ACTIONS fromVector(Vector2d move) {
-      // Probably better to use .equals() instead of == to test for equality,
-      // but not necessary for the current call hierarchy of this method
-      if (move.equals(THRUST)) return ACTION_THRUST;
-      else if (move.equals(LEFT)) return ACTION_LEFT;
-      else if (move.equals(RIGHT)) return ACTION_RIGHT;
-      else return ACTION_NIL;
-    }
-
 
     public static ACTIONS fromVector(Direction move) {
       // Probably better to use .equals() instead of == to test for equality,

@@ -19,8 +19,6 @@ public class Vector2d {
    */
   public double y;
 
-  private boolean mutable;
-
   /**
    * Default constructor.
    */
@@ -28,16 +26,23 @@ public class Vector2d {
     this(0, 0);
   }
 
+  /**
+   * Builds a vector from its coordinates.
+   * @param x x coordinate
+   * @param y y coordinate
+   */
+  public Vector2d(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
 
   /**
-   * Create a new vector of size (0,0).
-   *
-   * @param mutable true if vector can be modified
+   * Builds a vector from another vector.
+   * @param v Vector to copy from.
    */
-  public Vector2d(boolean mutable) {
-    x = 0;
-    y = 0;
-    this.mutable = mutable;
+  public Vector2d(Vector2d v) {
+    this.x = v.x;
+    this.y = v.y;
   }
 
   /**
@@ -53,26 +58,6 @@ public class Vector2d {
     } else {
       return false;
     }
-  }
-
-  /**
-   * Builds a vector from its coordinates.
-   * @param x x coordinate
-   * @param y y coordinate
-   */
-  public Vector2d(double x, double y) {
-    this.x = x;
-    this.y = y;
-  }
-
-
-  /**
-   * Builds a vector from another vector.
-   * @param v Vector to copy from.
-   */
-  public Vector2d(Vector2d v) {
-    this.x = v.x;
-    this.y = v.y;
   }
 
   /**
@@ -178,6 +163,12 @@ public class Vector2d {
     this.x -= v.x;
     this.y -= v.y;
     return this;
+  }
+
+  public static Vector2d subtract(final Vector2d first, final Vector2d second) {
+    Vector2d third = new Vector2d(first);
+    third.subtract(second);
+    return third;
   }
 
   /**

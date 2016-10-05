@@ -1,7 +1,6 @@
 package ontology.asteroids;
 
-import core.game.Game;
-import core.game.StateObservation;
+import core.game.StateObservationMulti;
 import ontology.Constants;
 import ontology.Types;
 
@@ -19,12 +18,12 @@ import java.awt.geom.AffineTransform;
  * https://google.github.io/styleguide/javaguide.html
  */
 public class View extends JComponent {
-  public Game game;
+  public StateObservationMulti game;
   public boolean ready = false;
   public static Color bg = Types.BLACK;
   public static final Font FONT = new Font("Courier", Font.PLAIN, 20);
 
-  public View(Game game) {
+  public View(StateObservationMulti game) {
     this.game = game;
   }
 

@@ -1,7 +1,6 @@
 package controllers.human;
 
-import core.game.Game;
-import core.game.StateObservation;
+import core.game.StateObservationMulti;
 import core.player.Player;
 import ontology.Types;
 import tools.Direction;
@@ -19,7 +18,7 @@ public class Agent extends Player
    * @param elapsedTimer Timer for the controller creation.
    * @param playerID ID if this agent
    */
-  public Agent(StateObservation so, ElapsedCpuTimer elapsedTimer, int playerID)
+  public Agent(StateObservationMulti so, ElapsedCpuTimer elapsedTimer, int playerID)
   {
     setPlayerID(playerID);
   }
@@ -32,11 +31,11 @@ public class Agent extends Player
    * @param elapsedTimer Timer when the action returned is due.
    * @return An action for the current state
    */
-  public Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer)
+  public Types.ACTIONS act(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer)
   {
     //int id = (getPlayerID() + 1) % stateObs.getNoPlayers();
-    Direction move = Utils.processMovementActionKeys(Game.ki.getMask(), getPlayerID());
-    boolean useOn = Utils.processUseKey(Game.ki.getMask(), getPlayerID());
+    Direction move = Utils.processMovementActionKeys(StateObservationMulti.ki.getMask(), getPlayerID());
+    boolean useOn = Utils.processFireKey(StateObservationMulti.ki.getMask(), getPlayerID());
 
     //In the keycontroller, move has preference.
     Types.ACTIONS action = Types.ACTIONS.fromVector(move);
@@ -46,7 +45,7 @@ public class Agent extends Player
     return action;
   }
 
-  public void result(StateObservation stateObservation, ElapsedCpuTimer elapsedCpuTimer)
+  public void result(StateObservationMulti stateObservation, ElapsedCpuTimer elapsedCpuTimer)
   {
     //System.out.println("Thanks for playing! " + stateObservation.isAvatarAlive());
   }

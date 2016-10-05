@@ -55,4 +55,8 @@ public class Utils {
     return Types.DNIL;
   }
 
+  public static boolean processFireKey(boolean[] key_pressed, int idx)
+  {
+    return key_pressed[Types.ACTIONS.ACTION_FIRE.getKey()[idx]];
+  }
 }
