@@ -2,6 +2,8 @@ package tools;
 
 import ontology.Types;
 
+import java.util.Random;
+
 /**
  * Created by Jialin Liu on 04/10/2016.
  * CSEE, University of Essex, UK
@@ -84,5 +86,15 @@ public class Utils {
       return (a_value - a_min)/(a_max - a_min);
     else    // if bounds are invalid, then return same value
       return a_value;
+  }
+
+  public static Object choice(Object[] elements, Random rnd)
+  {
+    return elements[rnd.nextInt(elements.length)];
+  }
+
+  public static int choice(int[] elements, Random rnd)
+  {
+    return elements[rnd.nextInt(elements.length)];
   }
 }

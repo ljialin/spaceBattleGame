@@ -1,4 +1,4 @@
-package heuristic;
+package controllers.heuristics;
 
 import ontology.asteroids.Ship;
 

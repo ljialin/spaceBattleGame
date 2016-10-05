@@ -9,8 +9,7 @@ import ontology.asteroids.*;
 import tools.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Jialin Liu on 04/10/2016.
@@ -550,4 +549,40 @@ public class StateObservationMulti {
     }
     return winners;
   }
+
+  public Vector2d getAvatarPosition(int playerId) {
+    Vector2d avatarPosition = this.avatars[playerId].getPosition();
+    return avatarPosition;
+  }
+
+  public ArrayList<StateObservationMulti>[] getPortalsPositions(Vector2d avatarPosition) {
+    return null;
+  }
+
+  public ArrayList<StateObservationMulti>[] getNPCPositions() {
+    return null;
+  }
+
+  public ArrayList<StateObservationMulti>[] getNPCPositions(Vector2d avatarPosition) {
+    return null;
+  }
+
+  public HashMap<Integer, Integer> getAvatarResources(int playerID) {
+    //Determine how many different resources does the avatar have.
+    HashMap<Integer, Integer> owned = new HashMap<Integer, Integer>();
+
+    if(avatars[playerID] == null)
+      return owned;
+
+    //And for each type, add their amount.
+    Set<Map.Entry<Integer, Integer>> entries = avatars[playerID].resources.entrySet();
+    for(Map.Entry<Integer, Integer> entry : entries)
+    {
+      owned.put(entry.getKey(), entry.getValue());
+    }
+
+    return owned;
+  }
+
+  public double getGameScore() { return this.avatars[0].getScore(); }
 }

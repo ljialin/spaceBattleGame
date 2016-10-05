@@ -26,7 +26,7 @@ public class GameTest {
   static String humanArrows = "controllers.humanArrows.Agent";
   static String humanWSAD = "controllers.humanWSAD.Agent";
   static String randomController = "controllers.sampleRandom.Agent";
-
+  static String OneStepLookAheadontroller = "sampleOneStepLookAhead";
 
   public static void main(String[] args) {
     playOne();
@@ -37,7 +37,7 @@ public class GameTest {
     boolean visuals = true;
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
-    players[0] = createController(humanArrows, 0, game);
+    players[0] = createController(OneStepLookAheadontroller, 0, game);
     //players[1] = createOLMCTSController(0, game);
     players[1] = createController(randomController, 1 , game);
 
