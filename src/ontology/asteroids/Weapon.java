@@ -22,7 +22,7 @@ public class Weapon extends GameObject {
     this.playerId = playerId;
     this.velocity = velocity;
     this.ttl = ttl;
-    setParams();
+    setRadius();
   }
 
   public Weapon(int playerId, Vector2d pos, Vector2d velocity) {
@@ -33,13 +33,13 @@ public class Weapon extends GameObject {
     this(-1, pos, velocity, Constants.MISSILE_MAX_TTL);
   }
 
-  public void setParams() {
-    this.radius = Constants.MISSILE_RADIUS;
+  public void setRadius() {
+    this.radius = 1;
   }
 
   @Override
   public void update() {
-    if (!dead()) {
+    if (!isDead()) {
       pos.add(velocity);
       ttl--;
     }
@@ -55,8 +55,15 @@ public class Weapon extends GameObject {
   public void draw(Graphics2D g) {
   }
 
-  public boolean dead() {
-    return ttl <= 0;
+  @Override
+  public void injured(int harm) {
+    this.ttl -= harm;
+  }
+
+  @Override
+  public boolean isDead() {
+    dead = ( ttl <= 0);
+    return dead;
   }
 
   public void hit() {

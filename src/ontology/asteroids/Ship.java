@@ -1,7 +1,7 @@
 package ontology.asteroids;
 
 import com.sun.javafx.util.Utils;
-import core.player.Player;
+import core.player.AbstractMultiPlayer;
 import ontology.Constants;
 import ontology.Types;
 import ontology.physics.ForcePhysics;
@@ -14,7 +14,6 @@ import tools.Vector2d;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -30,12 +29,11 @@ public class Ship extends GameObject {
   public Vector2d velocity;
   public boolean thrusting;
   public int healthPoints;
-  public ArrayList<Types.ACTIONS> actions;
-  public ArrayList<Types.ACTIONS> actionsNIL;
+  public int nbKills;
   public TreeMap<Integer, Integer> resources;
-  public Player player;
+  public AbstractMultiPlayer player;
 
-  private double score;
+  private double points;
   private Types.WINNER winState;
   private KeyHandler ki;
 
@@ -76,8 +74,11 @@ public class Ship extends GameObject {
     this.healthPoints = Constants.MAX_HEALTH_POINTS;
     this.winState = Types.WINNER.NO_WINNER;
     this.color = Types.PLAYER_COLOR[playerId];
-    this.score = 0.0;
+    this.points = 0.0;
+    this.nbKills = 0;
     this.destructivePower = Constants.MAX_HEALTH_POINTS;
+    this.resources = new TreeMap<>();
+    this.resources.put(Constants.WEAPON_ID_MISSILE,Constants.MISSILE_MAX_RESOURCE);
   }
 
   public void update(Types.ACTIONS action) {
@@ -160,11 +161,14 @@ public class Ship extends GameObject {
   }
 
   public double getScore() {
+    double score = Utils.clamp(0, this.healthPoints, Constants.MAX_HEALTH_POINTS) * Constants.LIVE_AWARD
+        + this.nbKills * Constants.KILL_AWARD
+        + this.points;
     return score;
   }
 
-  public void setPlayer(Player _player) {
-    this.player = _player;
+  public void setPlayer(AbstractMultiPlayer _AbstractMulti_player) {
+    this.player = _AbstractMulti_player;
   }
   /**
    * Gets the key handler of this avatar.
@@ -180,6 +184,21 @@ public class Ship extends GameObject {
     if (k instanceof KeyInput)
       ki = new KeyInput();
     else ki = k;
+  }
+
+  public void fireWeapon(int weaponId) {
+    int rest = this.resources.get(weaponId);
+    this.resources.replace(weaponId, rest, rest-1);
+    this.points -= Types.RESOURCE_INFO.get(weaponId)[0];
+  }
+
+  public void kill() {
+    this.nbKills++;
+  }
+
+  @Override
+  public void injured(int harm) {
+    this.healthPoints -= harm;
   }
 
   @Override

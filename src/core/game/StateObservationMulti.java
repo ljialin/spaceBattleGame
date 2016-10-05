@@ -1,13 +1,11 @@
 package core.game;
 
 import competition.CompetitionParameters;
-import core.player.Player;
+import core.player.AbstractMultiPlayer;
 import core.termination.Termination;
 import ontology.Constants;
 import ontology.Types;
-import ontology.asteroids.GameObject;
-import ontology.asteroids.Ship;
-import ontology.asteroids.View;
+import ontology.asteroids.*;
 import tools.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -62,17 +60,11 @@ public class StateObservationMulti {
    */
   private Random random;
 
-  /**
-   * Key Handler for human play. The default is CompetitionParameters.KEY_INPUT
-   */
-  public String key_handler;
-
-  public static KeyHandler ki;
-
   public boolean visible;
 
   public View view;
 
+  double scoreRecord[][];
   /**
    * Avatars last actions.
    * Array for all avatars in the game.
@@ -83,20 +75,22 @@ public class StateObservationMulti {
   public int no_players = 2; //default to two player
 
 
-  public StateObservationMulti() {
+  public StateObservationMulti(boolean visible) {
     reset();
+    this.visible = visible;
   }
 
   public void reset() {
     setParams();
     createAvatars();
     resetLastAction();
+    scoreRecord = new double[no_players][CompetitionParameters.MAX_TIMESTEPS];
   }
 
   public void setParams() {
     this.gameTick = -1;
     this.isEnded = false;
-    this.visible = false;
+    this.visible = true;
     this.objects = new ArrayList<GameObject>();
     this.terminations = new ArrayList<Termination>();
   }
@@ -135,16 +129,11 @@ public class StateObservationMulti {
   public Types.WINNER getWinner(int playerID) {return avatars[playerID].getWinState();}
 
   /**
-   * Returns the game score.
-   */
-  public double getScore() { return getScore(0); }
-
-  /**
    * Method overloaded for multi player games.
    * Returns the game score of the specified player.
    * @param playerID ID of the player.
    */
-  public double getScore(int playerID)
+  public double getGameScore(int playerID)
   {
     return avatars[playerID].getScore();
   }
@@ -160,21 +149,24 @@ public class StateObservationMulti {
       Vector2d pos = new Vector2d(unit_x * (i + 1), unit_y * (i + 1));
       Vector2d dir = new Vector2d(0, (i%2)==0? 1 : -1);
       this.avatars[i] = new Ship(pos, dir, i);
+      System.out.println("ship id=" + i + " x="+ unit_x * (i + 1) + " y=" + unit_y * (i + 1));
+      System.out.println("Ship id " + this.avatars[i].getPlayerId() + " is created at ("
+          + this.avatars[i].getPosition().x + "," + this.avatars[i].getPosition().y + ")");
     }
   }
 
   /**
    * Looks for the avatar of the game in the existing sprites. If the player
    * received as a parameter is not null, it is assigned to it.
-   * @param players the players that will play the game (only 1 in single player games).
+   * @param abstractMultiPlayers the players that will play the game (only 1 in single player games).
    */
-  private void assignPlayer(Player[] players)
+  private void assignPlayer(AbstractMultiPlayer[] abstractMultiPlayers)
   {
     //iterate through all avatars and assign their players
-    if (players.length == no_players) {
+    if (abstractMultiPlayers.length == no_players) {
       for (int i = 0; i < no_players; i++) {
-        if (players[i] != null) {
-          this.avatars[i].player = players[i];
+        if (abstractMultiPlayers[i] != null) {
+          this.avatars[i].player = abstractMultiPlayers[i];
           this.avatars[i].setPlayerId(i);
         } else {
           System.out.println("Null player.");
@@ -189,10 +181,10 @@ public class StateObservationMulti {
    * Initializes some variables for the game to be played, such as
    * the game tick, sampleRandom number generator, forward model and assigns
    * the player to the avatar.
-   * @param players Players that play this game.
+   * @param abstractMultiPlayers Players that play this game.
    * @param randomSeed sampleRandom seed for the whole game.
    */
-  private void prepareGame(Player[] players, int randomSeed)
+  private void prepareGame(AbstractMultiPlayer[] abstractMultiPlayers, int randomSeed)
   {
     //Start tick counter.
     gameTick = -1;
@@ -201,162 +193,227 @@ public class StateObservationMulti {
     random = new Random(randomSeed);
 
     //Assigns the player to the avatar of the game.
-    createAvatars();
-    assignPlayer(players);
+    this.no_players = abstractMultiPlayers.length;
+    //reset();
+    assignPlayer(abstractMultiPlayers);
   }
 
   /**
    * Plays the game, graphics enabled.
-   * @param players Players that play this game.
+   * @param abstractMultiPlayers Players that play this game.
    * @param randomSeed sampleRandom seed for the whole game.
    * @return the score of the game played.
    */
-  public double[] playGame(Player[] players, int randomSeed) {
-    prepareGame(players, randomSeed);
+  public double[][] playGame(AbstractMultiPlayer[] abstractMultiPlayers, int randomSeed) {
+    prepareGame(abstractMultiPlayers, randomSeed);
+    System.out.println("StateObservationMulti : game prepared !");
 
     view = new View(this);
+    new JEasyFrame(view, "battle");
+    view.repaint();
+
+    System.out.println("StateObservationMulti : view created !");
 
     for (int i=0; i<no_players; i++) {
-      if (players[i] instanceof KeyListener) {
-        view.addKeyListener((KeyListener) players[i]);
+      if (avatars[i].player instanceof KeyListener) {
+        view.addKeyListener((KeyListener) avatars[i].player);
         view.setFocusable(true);
         view.requestFocus();
         this.visible = true;
+        System.out.println("StateObservationMulti : Player i key added !");
       }
     }
+    System.out.println("StateObservationMulti : all key added !");
 
     waitTillReady();
 
     while (!isEnded) {
+      System.out.println("StateObservationMulti : gameTick=" + gameTick);
       update();
     }
+    System.out.println("StateObservationMulti :end at gameTick=" + gameTick);
+
 
     for (int i=0; i<no_players; i++) {
-      if (players[i] instanceof KeyListener) {
-        view.removeKeyListener((KeyListener) players[i]);
+      if (avatars[i].player instanceof KeyListener) {
+        view.removeKeyListener((KeyListener) avatars[i].player);
       }
     }
-
-    double[] res = new double[no_players];
-// TODO: 04/10/16
-    return res;
+    return scoreRecord;
   }
 
   public void update() {
-    // TODO: 04/10/16 checkMissile
     ElapsedCpuTimer elapsedTimer = new ElapsedCpuTimer();
     elapsedTimer.setMaxTimeMillis(CompetitionParameters.ACTION_TIME);
 
     Types.ACTIONS[] actions = new Types.ACTIONS[no_players];
     for (int i=0; i<no_players; i++) {
-      actions[i] = this.avatars[i].player.act(this, elapsedTimer);
+      actions[i] = this.avatars[i].player.act(this.copy(), elapsedTimer);
     }
 
-    update(actions);
+    advance(actions);
 
     for (GameObject ob : objects) {
       ob.update();
     }
     removeDead();
 
-    int[] reducedHealthPoints = checkCollision();
+    checkCollision();
+
     for (int i=0; i<no_players; i++) {
-      avatars[i].healthPoints -= reducedHealthPoints[i];
-      if (avatars[i].healthPoints <= 0) {
-        this.avatars[i].kill();
-        this.avatars[i].setWinState(Types.WINNER.PLAYER_LOSES);
-      }
+      scoreRecord[i][gameTick] = this.avatars[i].getScore();
     }
 
-    for (int i=0; i<this.objects.size(); i++) {
-      if (reducedHealthPoints[i+no_players] <= 0) {
-        this.objects.get(i).kill();
-      }
-    }
     removeDead();
+
+    if (gameTick >= CompetitionParameters.MAX_TIMESTEPS) {
+      isEnded = true;
+    }
+
   }
 
-  public void update(Types.ACTIONS[] actions) {
-    for (Types.ACTIONS action: actions) {
-      if (action.equals(Types.ACTIONS.ACTION_FIRE)) {
-        // TODO: 04/10/16
+  public void advance(Types.ACTIONS[] actions) {
+    for (int i=0; i<actions.length; i++) {
+      if (actions[i].equals(Types.ACTIONS.ACTION_FIRE)) {
+        fireMissile(i);
       } else {
-        // TODO: 04/10/16
+        avatars[i].update(actions[i]);
       }
-    }
-
-    // now apply them to the ships
-    for (int i=0; i<no_players; i++) {
-      avatars[i].update(actions[i]);
       wrap(avatars[i]);
     }
 
     gameTick++;
 
-    Ship[] cloneAvatars = new Ship[no_players];
-    for (int i=0; i<no_players; i++) {
-      cloneAvatars[i] = avatars[i].copy();
-    }
-
     if (visible) {
       view.repaint();
       sleep();
     }
+
+    if (scoreRecord != null) {
+      for (int i=0; i<no_players; i++) {
+        scoreRecord[i][gameTick] = getGameScore(i);
+      }
+    }
   }
 
   protected void removeDead() {
-    for(int i=objects.size()-1; i>1; i--) {
+    for(int i=objects.size()-1; i>=0; i--) {
       GameObject ob = objects.get(i);
       if(ob.isDead())
         objects.remove(i);
     }
   }
 
-  protected int[] checkCollision() {
-    int[] reducedHealthPoints = new int[no_players+this.objects.size()];
-    reducedHealthPoints = checkAvatarCollision(reducedHealthPoints);
-    reducedHealthPoints = checkAvatarObjectCollision(reducedHealthPoints);
-    reducedHealthPoints = checkObjectCollision(reducedHealthPoints);
-    return reducedHealthPoints;
+  protected void checkCollision() {
+    checkAvatarCollision();
+    checkAvatarObjectCollision();
+    checkObjectCollision();
   }
 
-  protected int[] checkAvatarCollision(int[] reducedHealthPoints) {
+  /**
+   * Priority collision check
+   */
+  protected void checkAvatarCollision() {
+    int[] crash = new int[no_players];
     for (int i=0; i<no_players; i++) {
       for (int j=i+1; j<no_players; j++) {
         if (overlap(avatars[i], avatars[j])) {
-          reducedHealthPoints[i] = reducedHealthPoints[i] + avatars[i].destructivePower;
-          reducedHealthPoints[j] = reducedHealthPoints[j] + 1;
+          crash[i] = 1;
+          crash[j] = 1;
         }
       }
     }
-    return reducedHealthPoints;
+    int deadShips = 0;
+    for (int i=0; i<crash.length; i++) {
+      if (crash[i] == 1) {
+        this.avatars[i].injured(Constants.MAX_HEALTH_POINTS);
+        this.avatars[i].setWinState(Types.WINNER.PLAYER_LOSES);
+        deadShips++;
+      }
+    }
+    if (no_players == deadShips) {
+      this.isEnded = true;
+    }
   }
 
   // One won't be hit by its weapons
-  protected int[] checkAvatarObjectCollision(int[] reducedHealthPoints) {
+  protected void checkAvatarObjectCollision() {
+    int[] usedWeapon = new int[this.objects.size()];
     for (int i=0; i<no_players; i++) {
-      for (int j=0; j<this.objects.size(); j++) {
-        if (this.objects.get(j).getPlayerId() != i && overlap(avatars[i], this.objects.get(j))) {
-          reducedHealthPoints[i] = reducedHealthPoints[i] + this.objects.get(j).destructivePower;
-          reducedHealthPoints[j+no_players] = reducedHealthPoints[j+no_players] + avatars[i].destructivePower;
+      if (this.avatars[i].getWinState() != Types.WINNER.PLAYER_LOSES) {
+        for (int j = 0; j < this.objects.size(); j++) {
+          if (this.objects.get(j).getPlayerId() != i && overlap(avatars[i], this.objects.get(j))) {
+            this.avatars[i].injured(objects.get(j).destructivePower);
+            this.avatars[objects.get(j).getPlayerId()].kill();
+            usedWeapon[j] = 1;
+          }
         }
       }
     }
-    return reducedHealthPoints;
+    for (int i=0; i<usedWeapon.length; i++) {
+      if (usedWeapon[i] == 1) {
+        objects.remove(i);
+      }
+    }
+    checkShips();
   }
 
-  protected int[] checkObjectCollision(int[] reducedHealthPoints) {
+  protected void checkShips() {
+    int deadShips = 0;
+    for (int i=0; i<no_players; i++) {
+      if (this.avatars[i].isDead()) {
+        this.avatars[i].setWinState(Types.WINNER.PLAYER_LOSES);
+      }
+    }
+    if (no_players - deadShips <= 1) {
+      this.isEnded = true;
+      checkWinner();
+    }
+  }
 
+  protected void checkWinner() {
+    if(this.isEnded) {
+      for (int i = 0; i < no_players; i++) {
+        if (!this.avatars[i].getWinState().equals(Types.WINNER.PLAYER_LOSES)) {
+          this.avatars[i].setWinState(Types.WINNER.PLAYER_WINS);
+        }
+      }
+    }
+  }
+
+  protected void checkObjectCollision() {
+    int[] usedWeapon = new int[this.objects.size()];
     for (int i=0; i<this.objects.size(); i++) {
       for (int j = i + 1; j < this.objects.size(); j++) {
         if (this.objects.get(j).getPlayerId() != this.objects.get(j).getPlayerId()
             && overlap(this.objects.get(i), this.objects.get(j))) {
-          reducedHealthPoints[i + no_players] = reducedHealthPoints[i + no_players] + this.objects.get(j).destructivePower;
-          reducedHealthPoints[j + no_players] = reducedHealthPoints[j + no_players] + this.objects.get(i).destructivePower;
+          usedWeapon[i] = 1;
+          usedWeapon[j] = 1;
         }
       }
     }
-    return reducedHealthPoints;
+    for (int i=0; i<usedWeapon.length; i++) {
+      if (usedWeapon[i] == 1) {
+        objects.remove(i);
+      }
+    }
+  }
+
+  private boolean overlap(GameObject ob1, GameObject ob2) {
+    double dist = ob1.getPosition().sqDist(ob2.getPosition());
+    boolean ret = dist < (ob1.getRadius() + ob2.getRadius());
+    return ret;
+  }
+
+  protected void fireMissile(int playerId) {
+    // need all the usual missile firing code here
+    Ship currentShip = this.avatars[playerId];
+    Missile m = new Missile(playerId, this.avatars[playerId].getPosition(), new Vector2d(0, 0));
+    m.setVelocityByDir(this.avatars[playerId].getDirection());
+    m.setPlayerId(playerId);
+    m.getPosition().add(m.velocity, (currentShip.getRadius()+m.getRadius())*1.5 / m.velocity.mag());
+    this.objects.add(m);
+    this.avatars[playerId].fireWeapon(Constants.WEAPON_ID_MISSILE);
   }
 
   public void sleep() {
@@ -367,12 +424,9 @@ public class StateObservationMulti {
     }
   }
 
-  private boolean overlap(GameObject ob1, GameObject ob2) {
-    double dist = ob1.getPosition().sqDist(ob2.getPosition());
-    boolean ret = dist < (ob1.getRadius() + ob2.getRadius());
-    return ret;
+  public ArrayList<Types.ACTIONS> getAvailableActions(int playerId) {
+    return Types.AVAILABLE_ACTIONS;
   }
-
 
   protected void waitTillReady()
   {
@@ -380,11 +434,11 @@ public class StateObservationMulti {
     {
       while(!view.ready) {
         view.repaint();
-        waitStep(1000);
+        waitStep(100);
       }
     }
 
-    waitStep(1000);
+    waitStep(100);
   }
 
   /**
@@ -404,7 +458,7 @@ public class StateObservationMulti {
   }
 
   private void wrap(GameObject ob) {
-    // only wrap objects which are wrappable
+    /** only wrap objects which are wrappable */
     if (ob.isWrappable()) {
       double x = (ob.getPosition().x + Constants.WIDTH) % Constants.WIDTH;
       double y = (ob.getPosition().y + Constants.HEIGHT) % Constants.HEIGHT;
@@ -433,13 +487,65 @@ public class StateObservationMulti {
 
     for (Ship ship : avatars) {
       ship.draw(g);
+      System.out.println("Ship id " + ship.getPlayerId() + " is drawn at ("
+          + ship.getPosition().x + "," + ship.getPosition().y + ")");
     }
 
     if(Constants.SHOW_ROLLOUTS)
     {
-      waitStep(5000);
+      waitStep(10);
     }
 
   }
 
+  public StateObservationMulti copy() {
+    StateObservationMulti state = new StateObservationMulti(false);
+    state.objects = copyObjects();
+    state.avatars = copyAvatars();
+    state.gameTick = gameTick;
+    state.visible = false;
+    return state;
+  }
+
+  protected ArrayList<GameObject> copyObjects() {
+    ArrayList<GameObject> objectClone = new ArrayList<GameObject>();
+    for (GameObject object : objects) {
+      objectClone.add(object.copy());
+    }
+
+    return objectClone;
+  }
+
+  protected Ship[] copyAvatars() {
+    Ship[] avatarClone = new Ship[no_players];
+    for (int i=0; i<no_players; i++) {
+      avatarClone[i] = avatars[i].copy();
+    }
+
+    return avatarClone;
+  }
+
+  public int getNoPlayers() {
+    return this.no_players;
+  }
+
+  public boolean isGameOver() {
+    return isEnded;
+  }
+
+  /**
+   * Method overloaded for multi player games.
+   * Indicates if there is a game winner in the current observation.
+   * Possible values are Types.WINNER.PLAYER_WINS, Types.WINNER.PLAYER_LOSES and
+   * Types.WINNER.NO_WINNER.
+   * @return the winner of the game.
+   */
+  public Types.WINNER[] getMultiGameWinner() {
+    checkWinner();
+    Types.WINNER[] winners = new Types.WINNER[no_players];
+    for (int i = 0; i < no_players; i++) {
+      winners[i] = avatars[i].getWinState();
+    }
+    return winners;
+  }
 }

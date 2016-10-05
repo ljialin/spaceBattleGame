@@ -5,6 +5,8 @@ import tools.Vector2d;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,8 +59,8 @@ public class Types {
   };
 
   public static int[][] ALL_ACTIONS = new int[][]{
-    {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SPACE, KeyEvent.VK_ESCAPE},
-    {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SHIFT, KeyEvent.VK_ESCAPE}
+      {KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SPACE},
+      {KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SHIFT}
   };
 
   public static enum ACTIONS {
@@ -66,8 +68,8 @@ public class Types {
     ACTION_THRUST(new int[]{KeyEvent.VK_UP, KeyEvent.VK_W}),
     ACTION_LEFT(new int[]{KeyEvent.VK_LEFT, KeyEvent.VK_A}),
     ACTION_RIGHT(new int[]{KeyEvent.VK_RIGHT, KeyEvent.VK_D}),
-    ACTION_FIRE(new int[]{KeyEvent.VK_SPACE, KeyEvent.VK_SHIFT}),
-    ACTION_ESCAPE(new int[]{KeyEvent.VK_ESCAPE, KeyEvent.VK_ESCAPE});
+    ACTION_FIRE(new int[]{KeyEvent.VK_SPACE, KeyEvent.VK_SHIFT});
+    //ACTION_ESCAPE(new int[]{KeyEvent.VK_ESCAPE, KeyEvent.VK_ESCAPE});
 
     private int[] key;
 
@@ -84,7 +86,7 @@ public class Types {
       else if (strKey.equalsIgnoreCase("ACTION_LEFT")) return ACTION_LEFT;
       else if (strKey.equalsIgnoreCase("ACTION_RIGHT")) return ACTION_RIGHT;
       else if (strKey.equalsIgnoreCase("ACTION_FIRE")) return ACTION_FIRE;
-      else if (strKey.equalsIgnoreCase("ACTION_ESCAPE")) return ACTION_ESCAPE;
+        //else if (strKey.equalsIgnoreCase("ACTION_ESCAPE")) return ACTION_ESCAPE;
       else return ACTION_NIL;
     }
 
@@ -105,8 +107,28 @@ public class Types {
     PLAYER_WINS(1);
 
     private int key;
-    WINNER(int val) {key=val;}
-    public int key() {return key;}
+
+    WINNER(int val) {
+      key = val;
+    }
+
+    public int key() {
+      return key;
+    }
   }
 
+
+  public static HashMap<Integer, int[]> RESOURCE_INFO = new HashMap<Integer, int[]>() {
+    {
+      put(Constants.WEAPON_ID_MISSILE, new int[]{Constants.MISSILE_COST, Constants.MISSILE_MAX_RESOURCE});
+    }
+  };
+
+  public static ArrayList<ACTIONS> AVAILABLE_ACTIONS = new ArrayList<ACTIONS>() {{
+    add(Types.ACTIONS.ACTION_NIL);
+    add(Types.ACTIONS.ACTION_LEFT);
+    add(Types.ACTIONS.ACTION_RIGHT);
+    add(Types.ACTIONS.ACTION_THRUST);
+    add(Types.ACTIONS.ACTION_FIRE);
+  }};
 }

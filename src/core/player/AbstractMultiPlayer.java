@@ -3,6 +3,8 @@ package core.player;
 import core.game.StateObservationMulti;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
+import tools.KeyHandler;
+import tools.KeyInput;
 
 import java.awt.*;
 import java.io.BufferedWriter;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
  *
  * Edited by Jialin Liu on 04/10/2016.
  */
-public abstract class Player {
+public abstract class AbstractMultiPlayer {
   /**
    * playerID
    */
@@ -33,11 +35,6 @@ public abstract class Player {
    * Last action executed by this agent.
    */
   private Types.ACTIONS lastAction = null;
-
-  /**
-   * List of actions to be dumped.
-   */
-  private ArrayList<Types.ACTIONS> allActions;
 
   /**
    * Random seed of the game.
@@ -111,7 +108,7 @@ public abstract class Player {
    * Get the history of actions of this player.
    * @return arrayList of all actions
    */
-  public ArrayList<Types.ACTIONS> getAllActions() { return allActions; }
+  public ArrayList<Types.ACTIONS> getAllActions() { return Types.AVAILABLE_ACTIONS; }
 
   /**
    * Gets the player the control to draw something on the screen.
@@ -124,4 +121,7 @@ public abstract class Player {
     //This method should be left empty in this class.
   }
 
+  public void setHuman() {
+    isHuman = true;
+  }
 }

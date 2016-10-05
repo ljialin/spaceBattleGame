@@ -1,7 +1,7 @@
 package controllers.doNothing;
 
-import core.game.StateObservation;
-import core.player.Player;
+import core.game.StateObservationMulti;
+import core.player.AbstractMultiPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
@@ -13,14 +13,14 @@ import tools.ElapsedCpuTimer;
  * Respect to Google Java Style Guide:
  * https://google.github.io/styleguide/javaguide.html
  */
-public class Agent extends Player {
+public class Agent extends AbstractMultiPlayer {
   /**
    * initialize all variables for the agent
    * @param stateObs Observation of the current state.
    * @param elapsedTimer Timer when the action returned is due.
    * @param playerID ID if this agent
    */
-  public Agent(StateObservation stateObs, ElapsedCpuTimer elapsedTimer, int playerID) {
+  public Agent(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer, int playerID) {
   }
 
   /**
@@ -30,7 +30,7 @@ public class Agent extends Player {
    * @return 	ACTION_NIL all the time
    */
   @Override
-  public Types.ACTIONS act(StateObservation stateObs, ElapsedCpuTimer elapsedTimer) {
+  public Types.ACTIONS act(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer) {
     return Types.ACTIONS.ACTION_NIL;
   }
 }

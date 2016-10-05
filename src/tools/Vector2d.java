@@ -195,6 +195,18 @@ public class Vector2d {
   }
 
   /**
+   * Multiplies this vector by a factor.
+   * @param fac factor to multiply this vector by.
+   * @return This vector, after the operation.
+   */
+  public static Vector2d multiply(Vector2d v, double fac) {
+    Vector2d newV = v.copy();
+    newV.x *= fac;
+    newV.y *= fac;
+    return newV;
+  }
+
+  /**
    * Rotates the vector an angle given, in radians.
    * @param theta angle given, in radians
    */

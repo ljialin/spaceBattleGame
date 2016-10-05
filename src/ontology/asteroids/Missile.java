@@ -20,7 +20,27 @@ public class Missile extends Weapon {
     this.destructivePower = Constants.MISSILE_DESTRUCTIVE_POWER;
   }
 
-    @Override
+  public Missile(int playerId, Vector2d pos, Vector2d velocity) {
+    super(playerId, pos, velocity);
+    this.destructivePower = Constants.MISSILE_DESTRUCTIVE_POWER;
+    setTtl();
+    setRadius();
+  }
+
+  public void setVelocityByDir(Vector2d dir) {
+    this.velocity = Vector2d.multiply(dir, Constants.MISSILE_MAX_SPEED);
+  }
+
+  @Override
+  public void setRadius() {
+    this.radius = Constants.MISSILE_RADIUS;
+  }
+
+  public void setTtl() {
+    this.ttl = Constants.MISSILE_MAX_TTL;
+  }
+
+  @Override
   public void draw(Graphics2D g) {
     g.setColor(Color.red);
     g.fillOval((int) (pos.x-radius), (int) (pos.y-radius), (int) radius * 2, (int) radius * 2);

@@ -22,12 +22,14 @@ public class View extends JComponent {
   public boolean ready = false;
   public static Color bg = Types.BLACK;
   public static final Font FONT = new Font("Courier", Font.PLAIN, 20);
-
+  Font font = new Font("Courier", Font.PLAIN, 20);
   public View(StateObservationMulti game) {
     this.game = game;
   }
 
   public void paintComponent(Graphics gx) {
+    System.out.println("View : paintComponent begin !");
+
     for (Ship ship : this.game.getAvatars()) {
       if (ship == null) {
         return;
@@ -37,7 +39,6 @@ public class View extends JComponent {
     Graphics2D g = (Graphics2D) gx;
     AffineTransform at = g.getTransform();
     g.translate((1 - Constants.VIEW_SCALE) * Constants.WIDTH / 2, (1- Constants.VIEW_SCALE) * Constants.HEIGHT / 2);
-
     g.scale(Constants.VIEW_SCALE, Constants.VIEW_SCALE);
 
     game.draw(g);
@@ -45,6 +46,8 @@ public class View extends JComponent {
     paintState(g);
 
     this.ready = true;
+
+    System.out.println("View : paintComponent ready !");
   }
 
   public void paintState(Graphics2D g) {
@@ -56,15 +59,21 @@ public class View extends JComponent {
       }
     }
 
+    g.setColor(Types.WHITE);
+    g.setFont(FONT);
+
     if(!game.getObjects().isEmpty()) {
       GameObject[] objectsCopy = game.getObjects().toArray(new GameObject[game.getObjects().size()]);
       for (GameObject object : objectsCopy) {
         object.draw(g);
       }
     }
+    System.out.println("View : paintState finished !");
 
-    g.setColor(Types.WHITE);
-    g.setFont(FONT);
+
   }
 
+  public Dimension getPreferredSize() {
+    return new Dimension(Constants.WIDTH, Constants.HEIGHT);
+  }
 }

@@ -24,7 +24,7 @@ public abstract class GameObject {
   public int destructivePower;
 
   public GameObject() {
-    this.pos.set(Constants.WIDTH / 2, Constants.WIDTH / 2);
+    this.pos = new Vector2d(Constants.WIDTH / 2, Constants.WIDTH / 2);
     this.radius = 0;
     this.playerId = -1;
     this.dead = false;
@@ -34,6 +34,8 @@ public abstract class GameObject {
 
   public GameObject(Vector2d pos) {
     this();
+    this.pos.x = pos.x;
+    this.pos.y = pos.y;
   }
 
   public abstract GameObject copy();
@@ -50,6 +52,9 @@ public abstract class GameObject {
     this.pos.x = x;
     this.pos.y = y;
   }
+
+
+  public abstract void injured(int harm);
 
   public int getPlayerId() {
     return playerId;

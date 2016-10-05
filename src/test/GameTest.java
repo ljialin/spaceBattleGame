@@ -1,100 +1,109 @@
 package test;
 
 import competition.CompetitionParameters;
-import controllers.doNothing.Agent;
-import core.game.Game;
-import core.game.StateObservation;
 import core.game.StateObservationMulti;
-import core.player.Player;
-import ontology.asteroids.View;
+import core.player.AbstractMultiPlayer;
 import tools.ElapsedCpuTimer;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Created by Jialin Liu on 04/10/2016.
+ * Created by Jialin Liu on 05/10/2016.
  * CSEE, University of Essex, UK
  * Email: jialin.liu@essex.ac.uk
- *
+ * <p>
  * Respect to Google Java Style Guide:
  * https://google.github.io/styleguide/javaguide.html
  */
-public class SampleTest {
-  View view;
-  String doNothingController = "controllers.multiPlayer.doNothing.Agent";
+public class GameTest {
+
+  static String doNothingController = "controllers.doNothing.Agent";
+  static String olmctsController = "controllers.sampleOLMCTS.Agent";
+  static String human = "controllers.humanWSAD.Agent";
 
   public static void main(String[] args) {
+    playOne();
   }
 
-  public static void playOne(int ply1, int ply2)
+  public static void playOne()
   {
     boolean visuals = true;
-    StateObservationMulti game = new StateObservationMulti();
-    Player[] players = new Player[2];
-    ElapsedCpuTimer elapsedTimer = new ElapsedCpuTimer();
-    elapsedTimer.setMaxTimeMillis(CompetitionParameters.ACTION_TIME);
-    Player[0] = createPlayer("", game, 3, false);
-    Player[1] = createPlayer(new controllers.doNothing.Agent(game, elapsedTimer, 1), game,);
+    StateObservationMulti game = new StateObservationMulti(visuals);
+    AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
+    players[0] = createController(doNothingController, 0, game);
+    players[1] = createOLMCTSController(0, game);
+   // players[1] = createController(human, 1 , game);
 
-    double[] res = game.playGame(players, 1);
+    double[][] res = game.playGame(players, 3);
   }
 
-  private static Player createPlayer(String playerName, StateObservationMulti so,
-                                     int randomSeed, boolean isHuman)
+  private static void dump(double[][] results, String filename)
   {
-    Player player = null;
-    try{
-      //create the controller.
-      player = (Player) createController(playerName, 0, so);
-      if(player != null)
-        player.setup(randomSeed, isHuman);
-      //else System.out.println("No controller created.");
+    try {
 
-    }catch (Exception e)
+      BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
+
+      for (int i = 0; i < results.length; ++i) {
+        for (int j = 0; j < results[i].length; ++j) {
+          writer.write(results[i][j] + ",");
+        }
+        writer.write("\n");
+      }
+
+      writer.close();
+
+    }catch(Exception e)
     {
-      //This probably happens because controller took too much time to be created.
+      System.out.println("MEH: " + e.toString());
       e.printStackTrace();
-      System.exit(1);
     }
-
-    //System.out.println("Created player.");
-
-    return player;
   }
 
-  protected static Player createController(String playerName, int playerID,
-                                           StateObservationMulti so) throws RuntimeException
+  protected static AbstractMultiPlayer createOLMCTSController(
+     int playerID, StateObservationMulti so) {
+    ElapsedCpuTimer ect = new ElapsedCpuTimer(CompetitionParameters.TIMER_TYPE);
+    ect.setMaxTimeMillis(CompetitionParameters.INITIALIZATION_TIME);
+    AbstractMultiPlayer abstractMultiPlayer = new controllers.sampleOLMCTS.Agent(so.copy(), ect.copy(), playerID);
+    return abstractMultiPlayer;
+  }
+
+
+  protected static AbstractMultiPlayer createController(String playerName, int playerID,
+                                                        StateObservationMulti so) throws RuntimeException
   {
-    Player player = null;
+    AbstractMultiPlayer abstractMultiPlayer = null;
     try
     {
       //Determine the time due for the controller creation.
       ElapsedCpuTimer ect = new ElapsedCpuTimer(CompetitionParameters.TIMER_TYPE);
       ect.setMaxTimeMillis(CompetitionParameters.INITIALIZATION_TIME);
-      if (so.getNoPlayers() < 2) { //single player
+      if (so.no_players < 2) { //single player
         //Get the class and the constructor with arguments (StateObservation, long).
-        Class<? extends Player> controllerClass = Class.forName(playerName).asSubclass(Player.class);
+        Class<? extends AbstractMultiPlayer> controllerClass = Class.forName(playerName).asSubclass(AbstractMultiPlayer.class);
         Class[] gameArgClass = new Class[]{StateObservationMulti.class, ElapsedCpuTimer.class};
         Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
 
         //Call the constructor with the appropriate parameters.
         Object[] constructorArgs = new Object[]{so, ect.copy()};
 
-        player = (Player) controllerArgsConstructor.newInstance(constructorArgs);
-        player.setPlayerID(playerID);
+        abstractMultiPlayer = (AbstractMultiPlayer) controllerArgsConstructor.newInstance(constructorArgs);
+        abstractMultiPlayer.setPlayerID(playerID);
 
       } else { //multi player
         //Get the class and the constructor with arguments (StateObservation, long, int).
-        Class<? extends Player> controllerClass = Class.forName(playerName).asSubclass(Player.class);
+        Class<? extends AbstractMultiPlayer> controllerClass = Class.forName(playerName).asSubclass(AbstractMultiPlayer.class);
         Class[] gameArgClass = new Class[]{StateObservationMulti.class, ElapsedCpuTimer.class, int.class};
         Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
 
         //Call the constructor with the appropriate parameters.
         Object[] constructorArgs = new Object[]{(StateObservationMulti)so.copy(), ect.copy(), playerID};
 
-        player = (Player) controllerArgsConstructor.newInstance(constructorArgs);
-        player.setPlayerID(playerID);
+        abstractMultiPlayer = (AbstractMultiPlayer) controllerArgsConstructor.newInstance(constructorArgs);
+        abstractMultiPlayer.setPlayerID(playerID);
       }
       //Check if we returned on time, and act in consequence.
       long timeTaken = ect.elapsedMillis();
@@ -106,7 +115,7 @@ public class SampleTest {
       }
       else
       {
-          System.out.println("Controller initialization time: " + timeTaken + " ms.");
+        System.out.println("Controller initialization time: " + timeTaken + " ms.");
       }
 
       //This code can throw many exceptions (no time related):
@@ -141,6 +150,6 @@ public class SampleTest {
       System.exit(1);
     }
 
-    return player;
+    return abstractMultiPlayer;
   }
 }
