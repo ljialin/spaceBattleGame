@@ -3,7 +3,7 @@ package controllers.sampleOLMCTS;
 import java.util.Random;
 
 import core.game.StateObservationMulti;
-import controllers.heuristics.Heuristics;
+import controllers.multiPlayer.heuristics.Heuristics;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.Utils;

@@ -285,10 +285,14 @@ public class StateObservationMulti {
 
   public void advance(Types.ACTIONS[] actions) {
     for (int i=0; i<actions.length; i++) {
-      if (actions[i].equals(Types.ACTIONS.ACTION_FIRE)) {
-        fireMissile(i, Constants.WEAPON_ID_MISSILE);
+      if(actions[i] == null) {
+        avatars[i].update(Types.ACTIONS.ACTION_NIL);
       } else {
-        avatars[i].update(actions[i]);
+        if (actions[i].equals(Types.ACTIONS.ACTION_FIRE)) {
+          fireMissile(i, Constants.WEAPON_ID_MISSILE);
+        } else {
+          avatars[i].update(actions[i]);
+        }
       }
       wrap(avatars[i]);
     }

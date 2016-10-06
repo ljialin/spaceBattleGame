@@ -26,7 +26,8 @@ public class GameTest {
   static String humanArrows = "controllers.humanArrows.Agent";
   static String humanWSAD = "controllers.humanWSAD.Agent";
   static String randomController = "controllers.sampleRandom.Agent";
-  static String OneStepLookAheadontroller = "controllers.sampleOneStepLookAhead.Agent";
+  static String OneStepLookAheadController = "controllers.sampleOneStepLookAhead.Agent";
+  static String GAController = "controllers.sampleGA.Agent";
 
   public static void main(String[] args) {
     playOne();
@@ -37,8 +38,8 @@ public class GameTest {
     boolean visuals = true;
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
-    players[0] = createMultiPlayer(olmctsController, game, 3, 0, true);
-    players[1] = createMultiPlayer(humanArrows, game, 3, 1, false);
+    players[0] = createMultiPlayer(olmctsController, game, 3, 0, false);
+    players[1] = createMultiPlayer(GAController, game, 3, 1, false);
 
     double[][] res = game.playGame(players, 3);
   }

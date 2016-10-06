@@ -1,6 +1,6 @@
 package controllers.sampleOneStepLookAhead;
 
-import controllers.heuristics.SimpleStateHeuristic;
+import controllers.multiPlayer.heuristics.SimpleStateHeuristic;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
 import ontology.Types;

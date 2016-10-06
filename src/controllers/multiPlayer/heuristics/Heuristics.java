@@ -1,4 +1,4 @@
-package controllers.heuristics;
+package controllers.multiPlayer.heuristics;
 
 import ontology.asteroids.Ship;
 

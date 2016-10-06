@@ -109,4 +109,18 @@ public class Utils {
   {
     return elements[rnd.nextInt(elements.length)];
   }
+
+  public static int argmax (double[] values)
+  {
+    int maxIndex = -1;
+    double max = Double.NEGATIVE_INFINITY;
+    for (int i = 0; i < values.length; i++) {
+      double elem = values[i];
+      if (elem > max) {
+        max = elem;
+        maxIndex = i;
+      }
+    }
+    return maxIndex;
+  }
 }

@@ -1,4 +1,4 @@
-package controllers.heuristics;
+package controllers.multiPlayer.heuristics;
 
 import core.game.StateObservationMulti;
 import ontology.Types;
