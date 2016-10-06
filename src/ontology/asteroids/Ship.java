@@ -7,13 +7,11 @@ import ontology.Types;
 import ontology.physics.ForcePhysics;
 import ontology.physics.GravityPhysics;
 import ontology.physics.RotationPhysics;
-import tools.KeyHandler;
-import tools.KeyInput;
 import tools.Vector2d;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -27,15 +25,15 @@ import java.util.TreeMap;
 public class Ship extends GameObject {
   public Vector2d dir;
   public Vector2d velocity;
-  public boolean thrusting;
-  public int healthPoints;
-  public int nbKills;
   public TreeMap<Integer, Integer> resources;
+  public ArrayList<WeaponSystem> weaponSystems;
   public AbstractMultiPlayer player;
 
-  private double points;
+  private boolean thrusting;
+  private int healthPoints;
+  private int nbKills;
+  private double cost;
   private Types.WINNER winState;
-  private KeyHandler ki;
 
   /** define the shape of the ship */
   static int[] xp = {-Constants.SHIP_RADIUS, 0, Constants.SHIP_RADIUS, 0};
@@ -74,16 +72,20 @@ public class Ship extends GameObject {
     this.healthPoints = Constants.MAX_HEALTH_POINTS;
     this.winState = Types.WINNER.NO_WINNER;
     this.color = Types.PLAYER_COLOR[playerId];
-    this.points = 0.0;
+    this.cost = 0.0;
     this.nbKills = 0;
     this.destructivePower = Constants.MAX_HEALTH_POINTS;
     this.resources = new TreeMap<>();
-    this.resources.put(Constants.WEAPON_ID_MISSILE,Constants.MISSILE_MAX_RESOURCE);
+//    this.resources.put(Constants.WEAPON_ID_MISSILE,Constants.MISSILE_MAX_RESOURCE);
+    this.weaponSystems = new ArrayList<>();
+    this.weaponSystems.add(new WeaponSystem(Constants.WEAPON_ID_MISSILE));
   }
 
   public void update(Types.ACTIONS action) {
+    this.thrusting = false;
     switch (action) {
       case ACTION_THRUST:
+        this.thrusting = true;
         ForcePhysics.thrust(velocity, dir);
         break;
       case ACTION_LEFT:
@@ -103,12 +105,16 @@ public class Ship extends GameObject {
 
     GravityPhysics.gravity(pos, velocity);
 
-    velocity.x = Utils.clamp(velocity.x, -Constants.SHIP_MAX_SPEED,
+    velocity.x = Utils.clamp(-Constants.SHIP_MAX_SPEED, velocity.x,
         Constants.SHIP_MAX_SPEED);
-    velocity.y = Utils.clamp(velocity.y, -Constants.SHIP_MAX_SPEED,
+    velocity.y = Utils.clamp(-Constants.SHIP_MAX_SPEED, velocity.y,
         Constants.SHIP_MAX_SPEED);
 
     pos.add(velocity);
+
+    for (WeaponSystem ws : weaponSystems) {
+      ws.update();
+    }
   }
 
   public double dotTo(Ship other)
@@ -144,14 +150,6 @@ public class Ship extends GameObject {
     return dir;
   }
 
-  public Vector2d getVelocity() {
-    return velocity;
-  }
-
-  public boolean isThrusting() {
-    return thrusting;
-  }
-
   public Types.WINNER getWinState() {
     return winState;
   }
@@ -161,35 +159,34 @@ public class Ship extends GameObject {
   }
 
   public double getScore() {
-    double score = Utils.clamp(0, this.healthPoints, Constants.MAX_HEALTH_POINTS) * Constants.LIVE_AWARD
-        + this.nbKills * Constants.KILL_AWARD
-        + this.points;
+    double score = getPoints()
+        + this.healthPoints * Constants.LIVE_AWARD;
     return score;
   }
 
   public void setPlayer(AbstractMultiPlayer _AbstractMulti_player) {
     this.player = _AbstractMulti_player;
   }
-  /**
-   * Gets the key handler of this avatar.
-   * @return - KeyHandler object.
-   */
-  public KeyHandler getKeyHandler() { return ki; }
 
-  /**
-   * Sets the key handler of this avatar.
-   * @param k - new KeyHandler object.
-   */
-  public void setKeyHandler(KeyHandler k) {
-    if (k instanceof KeyInput)
-      ki = new KeyInput();
-    else ki = k;
+  public WeaponSystem getWeapon(int weaponId) {
+    for(WeaponSystem ws : weaponSystems) {
+      if (ws.getWeaponId() == weaponId) {
+        return ws;
+      }
+    }
+    return null;
   }
 
-  public void fireWeapon(int weaponId) {
-    int rest = this.resources.get(weaponId);
-    this.resources.replace(weaponId, rest, rest-1);
-    this.points -= Types.RESOURCE_INFO.get(weaponId)[0];
+  public boolean fireWeapon(int weaponId) {
+    WeaponSystem ws = getWeapon(weaponId);
+    if (ws != null) {
+      boolean canFire = ws.fire();
+      if (canFire) {
+        this.cost -= ws.getCost();
+      }
+      return canFire;
+    }
+    return false;
   }
 
   public void kill() {
@@ -198,12 +195,27 @@ public class Ship extends GameObject {
 
   @Override
   public void injured(int harm) {
-    this.healthPoints -= harm;
+    this.healthPoints = this.healthPoints - harm;
+    this.healthPoints = tools.Utils.clamp(0, this.healthPoints, Constants.MAX_HEALTH_POINTS);
   }
 
   @Override
   public Ship copy() {
-    Ship cloneShip = new Ship(pos, dir, velocity, playerId);
+    Ship cloneShip = new Ship(pos.copy(), dir.copy(), velocity.copy(), playerId);
+    cloneShip.healthPoints = this.healthPoints;
+    cloneShip.nbKills = this.nbKills;
+    cloneShip.cost = this.cost;
+    cloneShip.winState = this.winState;
+    cloneShip.resources.clear();
+//    for(Map.Entry<Integer,Integer> entry : this.resources.entrySet()) {
+//      int key = entry.getKey();
+//      int value = entry.getValue();
+//      cloneShip.resources.put(key, value);
+//    }
+    cloneShip.weaponSystems.clear();
+    for(WeaponSystem ws : weaponSystems) {
+      cloneShip.weaponSystems.add(ws.copy());
+    }
     return cloneShip;
   }
 
@@ -227,5 +239,22 @@ public class Ship extends GameObject {
       g.fillPolygon(xpThrust, ypThrust, xpThrust.length);
     }
     g.setTransform(at);
+  }
+
+  public double getPoints() {
+    return this.nbKills * Constants.KILL_AWARD + this.cost;
+  }
+
+  public double getCost() {
+    return this.cost;
+  }
+
+  public int getHealthPoints() {
+    return this.healthPoints;
+  }
+
+  @Override
+  public boolean isDead() {
+    return (this.healthPoints<=0);
   }
 }

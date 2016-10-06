@@ -148,9 +148,9 @@ public class StateObservationMulti {
       Vector2d pos = new Vector2d(unit_x * (i + 1), unit_y * (i + 1));
       Vector2d dir = new Vector2d(0, (i%2)==0? 1 : -1);
       this.avatars[i] = new Ship(pos, dir, i);
-      System.out.println("ship id=" + i + " x="+ unit_x * (i + 1) + " y=" + unit_y * (i + 1));
-      System.out.println("Ship id " + this.avatars[i].getPlayerId() + " is created at ("
-          + this.avatars[i].getPosition().x + "," + this.avatars[i].getPosition().y + ")");
+//      System.out.println("ship id=" + i + " x="+ unit_x * (i + 1) + " y=" + unit_y * (i + 1));
+//      System.out.println("Ship id " + this.avatars[i].getPlayerId() + " is created at ("
+//          + this.avatars[i].getPosition().x + "," + this.avatars[i].getPosition().y + ")");
     }
   }
 
@@ -205,13 +205,13 @@ public class StateObservationMulti {
    */
   public double[][] playGame(AbstractMultiPlayer[] abstractMultiPlayers, int randomSeed) {
     prepareGame(abstractMultiPlayers, randomSeed);
-    System.out.println("StateObservationMulti : game prepared !");
+//    System.out.println("StateObservationMulti : game prepared !");
 
     view = new View(this);
     new JEasyFrame(view, "battle");
     view.repaint();
 
-    System.out.println("StateObservationMulti : view created !");
+//    System.out.println("StateObservationMulti : view created !");
 
     for (int i=0; i<no_players; i++) {
       if (avatars[i].player instanceof KeyListener) {
@@ -219,19 +219,31 @@ public class StateObservationMulti {
         view.setFocusable(true);
         view.requestFocus();
         this.visible = true;
-        System.out.println("StateObservationMulti : Player i key added !");
+//        System.out.println("StateObservationMulti : Player i key added !");
       }
     }
-    System.out.println("StateObservationMulti : all key added !");
+//    System.out.println("StateObservationMulti : all key added !");
 
     waitTillReady();
 
     while (!isEnded) {
-      System.out.println("StateObservationMulti : gameTick=" + gameTick);
+//      System.out.println("StateObservationMulti : gameTick=" + gameTick);
       update();
     }
-    System.out.println("StateObservationMulti :end at gameTick=" + gameTick);
-
+    System.out.println("StateObservationMulti : end at gameTick=" + gameTick);
+    System.out.println("Final results:");
+    for (int i=0; i<no_players; i++) {
+      if (this.avatars[i].getWinState() == Types.WINNER.PLAYER_LOSES) {
+        System.out.println("player " + i + " loses with score " + avatars[i].getScore()
+            + " points " +avatars[i].getPoints());
+      } else if (this.avatars[i].getWinState() == Types.WINNER.PLAYER_WINS) {
+        System.out.println("player " + i + " wins with score " + avatars[i].getScore()
+            + " points " +avatars[i].getPoints());
+      } else {
+        System.out.println("player " + i + " draws with score " + avatars[i].getScore()
+            + " points " +avatars[i].getPoints());
+      }
+    }
 
     for (int i=0; i<no_players; i++) {
       if (avatars[i].player instanceof KeyListener) {
@@ -265,7 +277,7 @@ public class StateObservationMulti {
 
     removeDead();
 
-    if (gameTick >= CompetitionParameters.MAX_TIMESTEPS) {
+    if (gameTick + 1 >= CompetitionParameters.MAX_TIMESTEPS) {
       isEnded = true;
     }
 
@@ -274,7 +286,7 @@ public class StateObservationMulti {
   public void advance(Types.ACTIONS[] actions) {
     for (int i=0; i<actions.length; i++) {
       if (actions[i].equals(Types.ACTIONS.ACTION_FIRE)) {
-        fireMissile(i);
+        fireMissile(i, Constants.WEAPON_ID_MISSILE);
       } else {
         avatars[i].update(actions[i]);
       }
@@ -282,7 +294,7 @@ public class StateObservationMulti {
     }
 
     gameTick++;
-
+//    System.out.println("StateObservationMulti : gameTick=" + gameTick);
     if (visible) {
       view.repaint();
       sleep();
@@ -345,11 +357,14 @@ public class StateObservationMulti {
             this.avatars[i].injured(objects.get(j).destructivePower);
             this.avatars[objects.get(j).getPlayerId()].kill();
             usedWeapon[j] = 1;
+//            System.out.println(" ship " + i + " hitted by missile launched by ship " + objects.get(j).getPlayerId());
+//            System.out.println(" ship " + i + " points " + this.avatars[i].getPoints());
+
           }
         }
       }
     }
-    for (int i=0; i<usedWeapon.length; i++) {
+    for (int i=usedWeapon.length-1; i>=0; i--) {
       if (usedWeapon[i] == 1) {
         objects.remove(i);
       }
@@ -362,6 +377,7 @@ public class StateObservationMulti {
     for (int i=0; i<no_players; i++) {
       if (this.avatars[i].isDead()) {
         this.avatars[i].setWinState(Types.WINNER.PLAYER_LOSES);
+        deadShips++;
       }
     }
     if (no_players - deadShips <= 1) {
@@ -391,7 +407,7 @@ public class StateObservationMulti {
         }
       }
     }
-    for (int i=0; i<usedWeapon.length; i++) {
+    for (int i=usedWeapon.length-1; i>=0; i--) {
       if (usedWeapon[i] == 1) {
         objects.remove(i);
       }
@@ -399,21 +415,24 @@ public class StateObservationMulti {
   }
 
   private boolean overlap(GameObject ob1, GameObject ob2) {
-    double dist = ob1.getPosition().sqDist(ob2.getPosition());
+    double dist = Vector2d.dist(ob1.getPosition(), ob2.getPosition());
     boolean ret = dist < (ob1.getRadius() + ob2.getRadius());
     return ret;
   }
 
-  protected void fireMissile(int playerId) {
+  protected void fireMissile(int playerId, int weaponId) {
     // need all the usual missile firing code here
     Ship currentShip = this.avatars[playerId];
-    if (currentShip.resources.get(Constants.WEAPON_ID_MISSILE) > 0) {
+    boolean fired = this.avatars[playerId].fireWeapon(weaponId);
+//    System.out.println("Ship " + playerId + " fires ? " + fired);
+    if(fired) {
       Missile m = new Missile(playerId, this.avatars[playerId].getPosition(), new Vector2d(0, 0));
       m.setVelocityByDir(this.avatars[playerId].getDirection());
+      m.velocity.add(currentShip.velocity);
       m.setPlayerId(playerId);
       m.getPosition().add(m.velocity, (currentShip.getRadius() + m.getRadius()) * 1.5 / m.velocity.mag());
       this.objects.add(m);
-      this.avatars[playerId].fireWeapon(Constants.WEAPON_ID_MISSILE);
+//      System.out.println("Ship " + playerId + " fires missile id " + m.getPlayerId());
     }
   }
 
@@ -435,11 +454,11 @@ public class StateObservationMulti {
     {
       while(!view.ready) {
         view.repaint();
-        waitStep(100);
+        waitStep(1000);
       }
     }
 
-    waitStep(100);
+    waitStep(1000);
   }
 
   /**
@@ -488,8 +507,8 @@ public class StateObservationMulti {
 
     for (Ship ship : avatars) {
       ship.draw(g);
-      System.out.println("Ship id " + ship.getPlayerId() + " is drawn at ("
-          + ship.getPosition().x + "," + ship.getPosition().y + ")");
+//      System.out.println("Ship id " + ship.getPlayerId() + " is drawn at ("
+//          + ship.getPosition().x + "," + ship.getPosition().y + ")");
     }
 
     if(Constants.SHOW_ROLLOUTS)
@@ -509,7 +528,7 @@ public class StateObservationMulti {
   }
 
   protected ArrayList<GameObject> copyObjects() {
-    ArrayList<GameObject> objectClone = new ArrayList<GameObject>();
+    ArrayList<GameObject> objectClone = new ArrayList<>();
     for (GameObject object : objects) {
       objectClone.add(object.copy());
     }
@@ -585,4 +604,12 @@ public class StateObservationMulti {
   }
 
   public double getGameScore() { return this.avatars[0].getScore(); }
+
+  public double getPlayerPoints(int playerId) {
+    return this.avatars[playerId].getPoints();
+  }
+
+  public int getAvatarLives(int playerId) {
+    return this.avatars[playerId].getHealthPoints();
+  }
 }

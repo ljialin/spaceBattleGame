@@ -120,7 +120,8 @@ public class Types {
 
   public static HashMap<Integer, int[]> RESOURCE_INFO = new HashMap<Integer, int[]>() {
     {
-      put(Constants.WEAPON_ID_MISSILE, new int[]{Constants.MISSILE_COST, Constants.MISSILE_MAX_RESOURCE});
+      put(Constants.WEAPON_ID_MISSILE, new int[]{Constants.MISSILE_DESTRUCTIVE_POWER,
+          Constants.MISSILE_COST, Constants.MISSILE_MAX_RESOURCE, Constants.MISSILE_COOLDOWN});
     }
   };
 

@@ -181,15 +181,12 @@ public class SingleTreeNode
       thisDepth++;
     }
 
-
     double delta = value(state);
 
     if(delta < bounds[0])
       bounds[0] = delta;
     if(delta > bounds[1])
       bounds[1] = delta;
-
-    //double normDelta = Utils.normalise(delta ,lastBounds[0], lastBounds[1]);
 
     return delta;
   }
@@ -215,7 +212,8 @@ public class SingleTreeNode
     double rawScore = a_gameState.getGameScore(Agent.id);
     double distScore = Heuristics.calcDistScore(
         a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1-Agent.id]);
-    return (rawScore + distScore*10);
+    return (rawScore + distScore);
+    //return rawScore;
   }
 
   public boolean finishRollout(StateObservationMulti rollerState, int depth)

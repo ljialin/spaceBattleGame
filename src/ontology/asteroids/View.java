@@ -20,15 +20,13 @@ import java.awt.geom.AffineTransform;
 public class View extends JComponent {
   public StateObservationMulti game;
   public boolean ready = false;
-  public static Color bg = Types.BLACK;
   public static final Font FONT = new Font("Courier", Font.PLAIN, 20);
-  Font font = new Font("Courier", Font.PLAIN, 20);
   public View(StateObservationMulti game) {
     this.game = game;
   }
 
   public void paintComponent(Graphics gx) {
-    System.out.println("View : paintComponent begin !");
+//    System.out.println("View : paintComponent begin !");
 
     for (Ship ship : this.game.getAvatars()) {
       if (ship == null) {
@@ -47,7 +45,7 @@ public class View extends JComponent {
 
     this.ready = true;
 
-    System.out.println("View : paintComponent ready !");
+//    System.out.println("View : paintComponent ready !");
   }
 
   public void paintState(Graphics2D g) {
@@ -59,8 +57,6 @@ public class View extends JComponent {
       }
     }
 
-    g.setColor(Types.WHITE);
-    g.setFont(FONT);
 
     if(!game.getObjects().isEmpty()) {
       GameObject[] objectsCopy = game.getObjects().toArray(new GameObject[game.getObjects().size()]);
@@ -68,9 +64,27 @@ public class View extends JComponent {
         object.draw(g);
       }
     }
-    System.out.println("View : paintState finished !");
+
+    g.setColor(Types.WHITE);
+    g.setFont(FONT);
+//    System.out.println("View : paintState finished !");
+
+    double sc0 = ((int)(game.getGameScore(0) * 1000) * 0.001);
+    double sc1 = ((int)(game.getGameScore(1) * 1000) * 0.001);
+    String strScores    = "Score:    " + sc0 + " | " + sc1;
 
 
+    String strPoints = "Points:    " + game.getPlayerPoints(0) + " | " + game.getPlayerPoints(1);
+    String strTicks = "Ticks:    " + game.getGameTick();
+    String strLives = "Life: " + game.getAvatarLives(0) +  " | " + game.getAvatarLives(1);
+    String p1 = "P1 Green";
+    String p2 = "P2 Blue";
+    g.drawString(strPoints, 10, 20);
+    g.drawString(strScores, 10, 40);
+    g.drawString(strLives, 10, 80);
+    g.drawString(strTicks, 10, 110);
+    g.drawString(p1, 10, 140);
+    g.drawString(p2, 10, 170);
   }
 
   public Dimension getPreferredSize() {

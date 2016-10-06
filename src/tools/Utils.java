@@ -16,7 +16,19 @@ public class Utils {
 
 
 
-  private static double clamp(double v, double min, double max) {
+  public static double clamp(double min, double v, double max) {
+    if (v > max) {
+      return max;
+    }
+
+    if (v < min) {
+      return min;
+    }
+
+    return v;
+  }
+
+  public static int clamp(int min, int v, int max) {
     if (v > max) {
       return max;
     }

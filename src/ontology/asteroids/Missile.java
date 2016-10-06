@@ -1,6 +1,7 @@
 package ontology.asteroids;
 
 import ontology.Constants;
+import ontology.Types;
 import tools.Vector2d;
 
 import java.awt.*;
@@ -16,15 +17,14 @@ import java.awt.*;
  */
 public class Missile extends Weapon {
   public Missile(int playerId, Vector2d pos, Vector2d velocity, int missileTTL) {
-    super(playerId, pos, velocity, missileTTL);
+    super(playerId, pos, velocity);
     this.destructivePower = Constants.MISSILE_DESTRUCTIVE_POWER;
+    this.ttl = missileTTL;
+    setRadius();
   }
 
   public Missile(int playerId, Vector2d pos, Vector2d velocity) {
-    super(playerId, pos, velocity);
-    this.destructivePower = Constants.MISSILE_DESTRUCTIVE_POWER;
-    setTtl();
-    setRadius();
+    this(playerId, pos, velocity, Constants.MISSILE_MAX_TTL);
   }
 
   public void setVelocityByDir(Vector2d dir) {
@@ -44,13 +44,15 @@ public class Missile extends Weapon {
     this.radius = Constants.MISSILE_RADIUS;
   }
 
-  public void setTtl() {
-    this.ttl = Constants.MISSILE_MAX_TTL;
+  @Override
+  public void draw(Graphics2D g) {
+    g.setColor(Types.RED);
+    g.fillOval((int) (pos.x-radius), (int) (pos.y-radius), (int) radius * 2, (int) radius * 2);
   }
 
   @Override
-  public void draw(Graphics2D g) {
-    g.setColor(Color.red);
-    g.fillOval((int) (pos.x-radius), (int) (pos.y-radius), (int) radius * 2, (int) radius * 2);
+  public GameObject copy() {
+    Missile object = new Missile(playerId, pos.copy(), velocity.copy(), ttl);
+    return object;
   }
 }

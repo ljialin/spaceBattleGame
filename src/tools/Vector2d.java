@@ -277,6 +277,10 @@ public class Vector2d {
     return Math.sqrt(sqr(x - xx) + sqr(y - yy));
   }
 
+  public static double dist(Vector2d v1, Vector2d v2) {
+    return Math.sqrt(sqr(v1.x - v2.x) + sqr(v1.y - v2.y));
+  }
+
 
   /**
    * Returns the atan2 of this vector.

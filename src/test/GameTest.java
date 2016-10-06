@@ -26,7 +26,7 @@ public class GameTest {
   static String humanArrows = "controllers.humanArrows.Agent";
   static String humanWSAD = "controllers.humanWSAD.Agent";
   static String randomController = "controllers.sampleRandom.Agent";
-  static String OneStepLookAheadontroller = "sampleOneStepLookAhead";
+  static String OneStepLookAheadontroller = "controllers.sampleOneStepLookAhead.Agent";
 
   public static void main(String[] args) {
     playOne();
@@ -37,9 +37,8 @@ public class GameTest {
     boolean visuals = true;
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
-    players[0] = createController(OneStepLookAheadontroller, 0, game);
-    //players[1] = createOLMCTSController(0, game);
-    players[1] = createController(randomController, 1 , game);
+    players[0] = createMultiPlayer(olmctsController, game, 3, 0, true);
+    players[1] = createMultiPlayer(humanArrows, game, 3, 1, false);
 
     double[][] res = game.playGame(players, 3);
   }
@@ -72,6 +71,29 @@ public class GameTest {
     ect.setMaxTimeMillis(CompetitionParameters.INITIALIZATION_TIME);
     AbstractMultiPlayer abstractMultiPlayer = new controllers.sampleOLMCTS.Agent(so.copy(), ect.copy(), playerID);
     return abstractMultiPlayer;
+  }
+
+  private static AbstractMultiPlayer createMultiPlayer(
+      String playerName, StateObservationMulti so,
+      int randomSeed, int id, boolean isHuman)
+  {
+    AbstractMultiPlayer player = null;
+
+    try{
+      //create the controller.
+      player = (AbstractMultiPlayer) createController(playerName, id, so);
+      if(player != null) {
+        player.setup(randomSeed, isHuman);
+      }
+
+    }catch (Exception e)
+    {
+      //This probably happens because controller took too much time to be created.
+      e.printStackTrace();
+      System.exit(1);
+    }
+
+    return player;
   }
 
 

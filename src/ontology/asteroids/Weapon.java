@@ -17,20 +17,11 @@ public class Weapon extends GameObject {
   public Vector2d velocity;
   public int ttl;
 
-  public Weapon(int playerId, Vector2d pos, Vector2d velocity, int ttl) {
+  public Weapon(int playerId, Vector2d pos, Vector2d velocity) {
     super(pos);
     this.playerId = playerId;
     this.velocity = velocity;
-    this.ttl = ttl;
     setRadius();
-  }
-
-  public Weapon(int playerId, Vector2d pos, Vector2d velocity) {
-    this(playerId, pos, velocity, Constants.MISSILE_MAX_TTL);
-  }
-
-  public Weapon(Vector2d pos, Vector2d velocity) {
-    this(-1, pos, velocity, Constants.MISSILE_MAX_TTL);
   }
 
   public void setRadius() {
@@ -47,7 +38,7 @@ public class Weapon extends GameObject {
 
   @Override
   public GameObject copy() {
-    Weapon object = new Weapon(playerId, pos, velocity, ttl);
+    Weapon object = new Weapon(playerId, pos.copy(), velocity.copy());
     return object;
   }
 
