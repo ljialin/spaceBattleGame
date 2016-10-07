@@ -16,11 +16,14 @@ import java.awt.*;
  * https://google.github.io/styleguide/javaguide.html
  */
 public class Missile extends Weapon {
+  private Color color;
+
   public Missile(int playerId, Vector2d pos, Vector2d velocity, int missileTTL) {
     super(playerId, pos, velocity);
     this.destructivePower = Constants.MISSILE_DESTRUCTIVE_POWER;
     this.ttl = missileTTL;
     setRadius();
+    setColor();
   }
 
   public Missile(int playerId, Vector2d pos, Vector2d velocity) {
@@ -29,6 +32,10 @@ public class Missile extends Weapon {
 
   public void setVelocityByDir(Vector2d dir) {
     this.velocity = Vector2d.multiply(dir, Constants.MISSILE_MAX_SPEED);
+  }
+
+  public void setColor() {
+    this.color = Types.PLAYER_COLOR[this.getPlayerId()];
   }
 
   @Override
@@ -46,7 +53,7 @@ public class Missile extends Weapon {
 
   @Override
   public void draw(Graphics2D g) {
-    g.setColor(Types.RED);
+    g.setColor(color);
     g.fillOval((int) (pos.x-radius), (int) (pos.y-radius), (int) radius * 2, (int) radius * 2);
   }
 

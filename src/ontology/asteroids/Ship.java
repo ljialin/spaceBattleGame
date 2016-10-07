@@ -241,6 +241,10 @@ public class Ship extends GameObject {
     g.setTransform(at);
   }
 
+  public void updatePoints() {
+    getPoints();
+  }
+
   public double getPoints() {
     return this.nbKills * Constants.KILL_AWARD + this.cost;
   }

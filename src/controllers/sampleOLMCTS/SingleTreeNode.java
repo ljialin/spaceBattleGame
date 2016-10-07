@@ -212,8 +212,9 @@ public class SingleTreeNode
     double rawScore = a_gameState.getGameScore(Agent.id);
     double distScore = Heuristics.calcDistScore(
         a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1-Agent.id]);
-    return (rawScore + distScore);
-    //return rawScore;
+    System.out.println("Raw score=" + rawScore);
+//    return (rawScore + distScore);
+    return rawScore;
   }
 
   public boolean finishRollout(StateObservationMulti rollerState, int depth)

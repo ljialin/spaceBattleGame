@@ -264,18 +264,11 @@ public class StateObservationMulti {
 
     advance(actions);
 
-    for (GameObject ob : objects) {
-      ob.update();
+    if (scoreRecord != null) {
+      for (int i=0; i<no_players; i++) {
+        scoreRecord[i][gameTick] = getGameScore(i);
+      }
     }
-    removeDead();
-
-    checkCollision();
-
-    for (int i=0; i<no_players; i++) {
-      scoreRecord[i][gameTick] = this.avatars[i].getScore();
-    }
-
-    removeDead();
 
     if (gameTick + 1 >= CompetitionParameters.MAX_TIMESTEPS) {
       isEnded = true;
@@ -297,17 +290,25 @@ public class StateObservationMulti {
       wrap(avatars[i]);
     }
 
+    for (GameObject ob : objects) {
+      ob.update();
+      wrap(ob);
+    }
+
+    checkCollision();
+
+    removeDead();
+
+    for (int i=0; i<no_players; i++) {
+      this.avatars[i].updatePoints();
+    }
+
     gameTick++;
+
 //    System.out.println("StateObservationMulti : gameTick=" + gameTick);
     if (visible) {
       view.repaint();
       sleep();
-    }
-
-    if (scoreRecord != null) {
-      for (int i=0; i<no_players; i++) {
-        scoreRecord[i][gameTick] = getGameScore(i);
-      }
     }
   }
 
@@ -436,7 +437,9 @@ public class StateObservationMulti {
       m.setPlayerId(playerId);
       m.getPosition().add(m.velocity, (currentShip.getRadius() + m.getRadius()) * 1.5 / m.velocity.mag());
       this.objects.add(m);
-//      System.out.println("Ship " + playerId + " fires missile id " + m.getPlayerId());
+      if(visible) {
+        System.out.println("Ship " + playerId + " fires missile id " + m.getPlayerId());
+      }
     }
   }
 

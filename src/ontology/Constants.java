@@ -11,34 +11,32 @@ package ontology;
 public class Constants {
 
   public static final int SHIP_RADIUS = 10;
-  public static final double SHIP_SCALE = 1;
-  public static final double SHIP_MAX_SPEED = 3; // define how quickly the ship will rotate
-  public static final double RELEASE_VELOCITY = 0;
+  public static final double SHIP_SCALE = 1; //
+  public static final double SHIP_MAX_SPEED = 5; //
   public static final double MAX_REPULSE_FORCE = 1.0;
   public static final double THRUST_SPEED = 1.0;
 
-  public static final int WEAPON_ID_MISSILE = 1;
-  public static final int MISSILE_MAX_RESOURCE = 100;
+  public static final int WEAPON_ID_MISSILE = 1; //
+  public static final int MISSILE_MAX_RESOURCE = 30;
   public static final int MISSILE_COST = 1;
-  public static final double MISSILE_RADIUS = 10;
-  public static final int MISSILE_MAX_TTL = 200;
+  public static final double MISSILE_RADIUS = 4;
+  public static final int MISSILE_MAX_TTL = 20;
   public static final int MISSILE_MAX_SPEED = 10;
   public static final int MISSILE_DESTRUCTIVE_POWER = 1;
-  public static final int MISSILE_COOLDOWN = 1;
+  public static final int MISSILE_COOLDOWN = 3;
 
-
-  public static final double GRAVITY = 0;
+  public static final double GRAVITY = 0; //
   public static final double FRICTION = 0.99;
 
-  public static final double RADIAN_UNIT = 10 * Math.PI / 180; // steerStep
+  public static final double RADIAN_UNIT = 10 * Math.PI / 180;
 
-  public static final int WIDTH = 640;
-  public static final int HEIGHT = 480;
-  public static final double VIEW_SCALE = 1.0;
+  public static final int WIDTH = 640; //
+  public static final int HEIGHT = 480; //
+  public static final double VIEW_SCALE = 1.0; //
 
   public static final int MAX_HEALTH_POINTS = 3;
-  public static final int KILL_AWARD = 100;
-  public static final int LIVE_AWARD = 100;
+  public static final int KILL_AWARD = 10;
+  public static final int LIVE_AWARD = 10;
 
-  public static final boolean SHOW_ROLLOUTS = true;
+  public static final boolean SHOW_ROLLOUTS = true; //
 }
