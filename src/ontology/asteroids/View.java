@@ -77,8 +77,8 @@ public class View extends JComponent {
     String strPoints = "Points:    " + game.getPlayerPoints(0) + " | " + game.getPlayerPoints(1);
     String strTicks = "Ticks:    " + game.getGameTick();
     String strLives = "Life: " + game.getAvatarLives(0) +  " | " + game.getAvatarLives(1);
-    String p1 = "P1 Green";
-    String p2 = "P2 Blue";
+    String p1 = "P1 BLUE";
+    String p2 = "P2 GREEN";
     g.drawString(strPoints, 10, 20);
     g.drawString(strScores, 10, 40);
     g.drawString(strLives, 10, 80);
