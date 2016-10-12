@@ -73,6 +73,8 @@ public class StateObservationMulti {
 
   public int no_players = 2; //default to two player
 
+  static public int cheating = -1;
+
 
   public StateObservationMulti(boolean visible) {
     reset();
@@ -83,10 +85,10 @@ public class StateObservationMulti {
     setParams();
     createAvatars();
     resetLastAction();
-    scoreRecord = new double[no_players][CompetitionParameters.MAX_TIMESTEPS];
   }
 
   public void setParams() {
+    scoreRecord = new double[no_players*2][CompetitionParameters.MAX_TIMESTEPS+1];
     this.gameTick = -1;
     this.isEnded = false;
     this.visible = true;
@@ -207,10 +209,12 @@ public class StateObservationMulti {
     prepareGame(abstractMultiPlayers, randomSeed);
 //    System.out.println("StateObservationMulti : game prepared !");
 
+    if(visible) {
     view = new View(this);
     new JEasyFrame(view, "battle");
-    view.repaint();
 
+      view.repaint();
+    }
 //    System.out.println("StateObservationMulti : view created !");
 
     for (int i=0; i<no_players; i++) {
@@ -230,18 +234,29 @@ public class StateObservationMulti {
 //      System.out.println("StateObservationMulti : gameTick=" + gameTick);
       update();
     }
-    System.out.println("StateObservationMulti : end at gameTick=" + gameTick);
-    System.out.println("Final results:");
+//    System.out.println("StateObservationMulti : end at gameTick=" + gameTick);
+//    System.out.println("Final results:");
+
+    if (scoreRecord != null) {
+      for (int i=0; i<no_players; i++) {
+        scoreRecord[2*i][CompetitionParameters.MAX_TIMESTEPS] = gameTick;
+        scoreRecord[2*i+1][CompetitionParameters.MAX_TIMESTEPS] = gameTick;
+      }
+    }
     for (int i=0; i<no_players; i++) {
       if (this.avatars[i].getWinState() == Types.WINNER.PLAYER_LOSES) {
-        System.out.println("player " + i + " loses with score " + avatars[i].getScore()
-            + " points " +avatars[i].getPoints());
+//        System.out.println("player " + i + " loses with score " + avatars[i].getScore()
+//            + " points " + avatars[i].getPoints() + " at gameTick " + gameTick);
+//        System.out.println("-1 " + avatars[i].getScore() + " " + gameTick);
       } else if (this.avatars[i].getWinState() == Types.WINNER.PLAYER_WINS) {
-        System.out.println("player " + i + " wins with score " + avatars[i].getScore()
-            + " points " +avatars[i].getPoints());
+//        System.out.println("player " + i + " wins with score " + avatars[i].getScore()
+//            + " points " +avatars[i].getPoints() + " at gameTick " + gameTick);
+//        System.out.println("1 " + avatars[i].getScore() + " " + gameTick);
       } else {
-        System.out.println("player " + i + " draws with score " + avatars[i].getScore()
-            + " points " +avatars[i].getPoints());
+//        System.out.println("player " + i + " draws with score " + avatars[i].getScore()
+//            + " points " +avatars[i].getPoints() + " at gameTick " + gameTick);
+//        System.out.println("0 " + avatars[i].getScore() + " " + gameTick);
+
       }
     }
 
@@ -266,7 +281,8 @@ public class StateObservationMulti {
 
     if (scoreRecord != null) {
       for (int i=0; i<no_players; i++) {
-        scoreRecord[i][gameTick] = getGameScore(i);
+        scoreRecord[2*i][gameTick] = getGameScore(i);
+        scoreRecord[2*i+1][gameTick] = getPlayerPoints(i);
       }
     }
 
@@ -438,9 +454,13 @@ public class StateObservationMulti {
       m.getPosition().add(m.velocity, (currentShip.getRadius() + m.getRadius()) * 1.5 / m.velocity.mag());
       this.objects.add(m);
       if(visible) {
-        System.out.println("Ship " + playerId + " fires missile id " + m.getPlayerId());
+//        System.out.println("Ship " + playerId + " fires missile id " + m.getPlayerId());
       }
     }
+  }
+
+  public boolean canFireWeapon(int playerId, int weaponId) {
+    return this.avatars[playerId].canFireWeapon(weaponId);
   }
 
   public void sleep() {

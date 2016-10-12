@@ -123,4 +123,29 @@ public class Utils {
     }
     return maxIndex;
   }
+
+  public static boolean findArgValue(String[] args, String argument, MutableDouble v)
+  {
+    boolean hasFound = false;
+    int argc = args.length;
+    for(int i=0 ; i<argc-1 ; i++)
+      if(args[i].equals("-" + argument)) {
+        v.setValue(Double.parseDouble(args[i + 1]));
+        hasFound = true;
+      }
+    return hasFound;
+  }
+
+  public static double[] meanArray(double[][] matrix) {
+    double[] res = new double[matrix[0].length];
+    for (int i=0; i<matrix.length; i++) {
+      for (int j=0; j<matrix[0].length; j++) {
+        res[j] += matrix[i][j];
+      }
+    }
+    for (int j=0; j<matrix[0].length; j++) {
+      res[j] /= matrix.length;
+    }
+    return res;
+  }
 }

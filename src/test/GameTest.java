@@ -3,13 +3,18 @@ package test;
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
+import ontology.Constants;
+import ontology.Types;
 import tools.ElapsedCpuTimer;
+import tools.MutableDouble;
+import tools.Utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
 
 /**
  * Created by Jialin Liu on 05/10/2016.
@@ -20,28 +25,174 @@ import java.lang.reflect.InvocationTargetException;
  * https://google.github.io/styleguide/javaguide.html
  */
 public class GameTest {
+  static Random rdm = new Random();
 
-  static String doNothingController = "controllers.doNothing.Agent";
-  static String olmctsController = "controllers.sampleOLMCTS.Agent";
-  static String humanArrows = "controllers.humanArrows.Agent";
-  static String humanWSAD = "controllers.humanWSAD.Agent";
-  static String randomController = "controllers.sampleRandom.Agent";
-  static String OneStepLookAheadController = "controllers.sampleOneStepLookAhead.Agent";
-  static String GAController = "controllers.sampleGA.Agent";
+  static String doNothingController = "doNothing";
+  static String olmctsController = "sampleOLMCTS";
+  static String humanArrows = "humanArrows";
+  static String humanWSAD = "humanWSAD";
+  static String sampleRandom = "sampleRandom";
+  static String OneStepLookAheadController = "sampleOneStepLookAhead";
+  static String GAController = "sampleGA";
+  static String rotateAndShootController = "rotateAndShoot";
+
+  static String[] testedControllers = {
+      "rotateAndShoot", "doNothing", "sampleRandom",
+      "sampleOneStepLookAhead", "sampleOLMCTS", "sampleGA"
+  };
 
   public static void main(String[] args) {
-    playOne();
+    //for (int i=0; i<testedControllers.length; i++) {
+    //  for (int j=1; j<testedControllers.length; j++) {
+    //    playMany(nbRuns, i, j);
+    //  }
+    //}
+//    playMany(1,0,3);
+
+
+
+    int p1 = 2;
+    int p2 = 0;
+    int nbRuns = 10;
+
+    MutableDouble opt_value = new MutableDouble(0.0);
+    if(args.length>1) {
+      if(Utils.findArgValue(args, "runs", opt_value)) {
+        nbRuns = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "p1", opt_value)) {
+        p1 = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "p2", opt_value)) {
+        p2 = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "1", opt_value)) {
+        Constants.SHIP_RADIUS = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "2", opt_value)) {
+        Constants.SHIP_MAX_SPEED = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "3", opt_value)) {
+        Constants.THRUST_SPEED = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "4", opt_value)) {
+        Constants.MISSILE_COST = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "5", opt_value)) {
+        Constants.MISSILE_RADIUS = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "6", opt_value)) {
+        Constants.MISSILE_MAX_TTL = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "7", opt_value)) {
+        Constants.MISSILE_MAX_SPEED = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "8", opt_value)) {
+        Constants.MISSILE_COOLDOWN = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "9", opt_value)) {
+        Constants.FRICTION = opt_value.intValue() / 100;
+      }
+      if(Utils.findArgValue(args, "10", opt_value)) {
+        Constants.RADIAN_UNIT = opt_value.intValue() * Math.PI / 180;
+      }
+      if(Utils.findArgValue(args, "11", opt_value)) {
+        Constants.KILL_AWARD = opt_value.intValue();
+      }
+    }
+    double[] res = playNAndMean( nbRuns, p1, p2);
+    String str = "" + res[0];
+    for (int i=1; i<res.length; i++) {
+      str += " " + res[i];
+    }
+    System.out.println(str);
   }
 
-  public static void playOne()
+//  public static void playOne()
+//  {
+//    boolean visuals = true;
+//    StateObservationMulti game = new StateObservationMulti(visuals);
+//    AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
+//    String p1 = sampleRandom;
+//    String p2 = sampleRandom;
+//    players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
+//    players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
+//    double[][] res = game.playGame(players, rdm.nextInt());
+//    dump(res, "./dat/" + p1 + "_vs_" + p2 + ".dat");
+//  }
+
+  public static void playOne(int id1, int id2, boolean visuals)
   {
-    boolean visuals = true;
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
-    players[0] = createMultiPlayer(olmctsController, game, 3, 0, false);
-    players[1] = createMultiPlayer(GAController, game, 3, 1, false);
+    String p1 = testedControllers[id1];
+    String p2 = testedControllers[id2];
+    players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
+    players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
+    if (id1==0) {
+      game.cheating = 0;
+    } else if (id2==0) {
+      game.cheating = 1;
+    } else {
+      game.cheating = -1;
+    }
+    double[][] res = game.playGame(players, rdm.nextInt());
+  }
 
-    double[][] res = game.playGame(players, 3);
+  public static void playMany(int nbRuns, int id1, int id2)
+  {
+    boolean visuals = false;
+    for (int i=0; i<nbRuns; i++) {
+      StateObservationMulti game = new StateObservationMulti(visuals);
+      AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
+      String p1 = testedControllers[id1];
+      String p2 = testedControllers[id2];
+      players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
+      players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
+      if (id1==0) {
+        game.cheating = 0;
+      } else if (id2==0) {
+        game.cheating = 1;
+      } else {
+        game.cheating = -1;
+      }
+      double[][] res = game.playGame(players, rdm.nextInt());
+      dump(res, "./dat/" + p1 + "_vs_" + p2 + "_run" + (i+1) + ".dat");
+    }
+  }
+
+  public static double[] playNAndMean(int nbRuns, int id1, int id2)
+  {
+    boolean visuals = false;
+    double[][] res = new double[nbRuns][5];
+    for (int i=0; i<nbRuns; i++) {
+      StateObservationMulti game = new StateObservationMulti(visuals);
+      AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
+      String p1 = testedControllers[id1];
+      String p2 = testedControllers[id2];
+      players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
+      players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
+      if (id1==0) {
+        game.cheating = 0;
+      } else if (id2==0) {
+        game.cheating = 1;
+      } else {
+        game.cheating = -1;
+      }
+      game.playGame(players, rdm.nextInt());
+      for (int p=0; p<2; p++) {
+        if (game.getAvatars()[p].getWinState() == Types.WINNER.PLAYER_LOSES) {
+          res[i][p*2] = 0;
+        }  else if (game.getAvatars()[p].getWinState() == Types.WINNER.PLAYER_WINS) {
+          res[i][p*2] = 1;
+        } else {
+          res[i][p*2] = 0;
+        }
+        res[i][p*2+1] = game.getAvatars()[p].getScore();
+      }
+      res[i][4] = game.getGameTick();
+    }
+    return Utils.meanArray(res);
   }
 
   private static void dump(double[][] results, String filename)
@@ -135,13 +286,13 @@ public class GameTest {
       long timeTaken = ect.elapsedMillis();
       if (ect.exceededMaxTime()) {
         long exceeded = -ect.remainingTimeMillis();
-        System.out.println("Controller initialization time out (" + exceeded + ").");
+//        System.out.println("Controller initialization time out (" + exceeded + ").");
 
         return null;
       }
       else
       {
-        System.out.println("Controller initialization time: " + timeTaken + " ms.");
+//        System.out.println("Controller initialization time: " + timeTaken + " ms.");
       }
 
       //This code can throw many exceptions (no time related):

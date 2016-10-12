@@ -58,6 +58,7 @@ public class Agent extends AbstractMultiPlayer {
     N_ACTIONS = new int[no_players];
 
     action_mapping = new HashMap[no_players];
+    //action_mapping = new HashMap<Integer,Types.ACTIONS>[no_players];
     r_action_mapping = new HashMap[no_players];
     for (int j = 0; j < no_players; j++) {
       action_mapping[j] = new HashMap<>();

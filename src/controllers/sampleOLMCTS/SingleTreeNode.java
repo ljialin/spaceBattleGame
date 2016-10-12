@@ -212,7 +212,7 @@ public class SingleTreeNode
     double rawScore = a_gameState.getGameScore(Agent.id);
     double distScore = Heuristics.calcDistScore(
         a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1-Agent.id]);
-    System.out.println("Raw score=" + rawScore);
+//    System.out.println("Raw score=" + rawScore);
 //    return (rawScore + distScore);
     return rawScore;
   }
@@ -268,7 +268,7 @@ public class SingleTreeNode
 
     if (selected == -1)
     {
-      System.out.println("Unexpected selection!");
+//      System.out.println("Unexpected selection!");
       selected = 0;
     }else if(allEqual)
     {

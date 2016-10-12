@@ -1,6 +1,7 @@
 package ontology.asteroids;
 
 import com.sun.javafx.util.Utils;
+import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
 import ontology.Constants;
 import ontology.Types;
@@ -41,7 +42,6 @@ public class Ship extends GameObject {
   /** the thrust poly that will be drawn when the ship is thrusting */
   static int[] xpThrust =  {-Constants.SHIP_RADIUS, 0, Constants.SHIP_RADIUS, 0};
   static int[] ypThrust = {Constants.SHIP_RADIUS, Constants.SHIP_RADIUS+1, Constants.SHIP_RADIUS, 0};
-
   /**
    * Constructor
    */
@@ -159,8 +159,8 @@ public class Ship extends GameObject {
   }
 
   public double getScore() {
-    double score = getPoints()
-        + this.healthPoints * Constants.LIVE_AWARD;
+    double score = getPoints();
+//        + this.healthPoints * Constants.LIVE_AWARD;
     return score;
   }
 
@@ -179,12 +179,27 @@ public class Ship extends GameObject {
 
   public boolean fireWeapon(int weaponId) {
     WeaponSystem ws = getWeapon(weaponId);
+    if (StateObservationMulti.cheating == playerId) {
+      this.cost -= ws.getCost();
+      return true;
+    }
     if (ws != null) {
       boolean canFire = ws.fire();
       if (canFire) {
         this.cost -= ws.getCost();
       }
       return canFire;
+    }
+    return false;
+  }
+
+  public boolean canFireWeapon(int weaponId) {
+    if (StateObservationMulti.cheating == playerId) {
+      return true;
+    }
+    WeaponSystem ws = getWeapon(weaponId);
+    if (ws != null) {
+      return ws.canFire();
     }
     return false;
   }

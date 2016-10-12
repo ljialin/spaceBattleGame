@@ -27,7 +27,6 @@ public class WeaponSystem {
     this.cost = Types.RESOURCE_INFO.get(weaponId)[1];
     this.resource = Types.RESOURCE_INFO.get(weaponId)[2];
     this.cooldown = 0;
-
   }
 
   public void resetCooldown() {
