@@ -1,6 +1,5 @@
 package ontology.asteroids;
 
-import com.sun.javafx.util.Utils;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
 import ontology.Constants;
@@ -8,6 +7,7 @@ import ontology.Types;
 import ontology.physics.ForcePhysics;
 import ontology.physics.GravityPhysics;
 import ontology.physics.RotationPhysics;
+import tools.Utils;
 import tools.Vector2d;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
