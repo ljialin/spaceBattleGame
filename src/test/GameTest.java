@@ -42,6 +42,7 @@ public class GameTest {
   };
 
   public static void main(String[] args) {
+//    ElapsedCpuTimer t = new ElapsedCpuTimer();
     //for (int i=0; i<testedControllers.length; i++) {
     //  for (int j=1; j<testedControllers.length; j++) {
     //    playMany(nbRuns, i, j);
@@ -52,7 +53,7 @@ public class GameTest {
 
 
     int p1 = 2;
-    int p2 = 0;
+    int p2 = 5;
     int nbRuns = 10;
 
     MutableDouble opt_value = new MutableDouble(0.0);
@@ -66,9 +67,7 @@ public class GameTest {
       if(Utils.findArgValue(args, "p2", opt_value)) {
         p2 = opt_value.intValue();
       }
-      if(Utils.findArgValue(args, "1", opt_value)) {
-        Constants.SHIP_RADIUS = opt_value.intValue();
-      }
+
       if(Utils.findArgValue(args, "2", opt_value)) {
         Constants.SHIP_MAX_SPEED = opt_value.intValue();
       }
@@ -78,34 +77,45 @@ public class GameTest {
       if(Utils.findArgValue(args, "4", opt_value)) {
         Constants.MISSILE_COST = opt_value.intValue();
       }
-      if(Utils.findArgValue(args, "5", opt_value)) {
-        Constants.MISSILE_RADIUS = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "6", opt_value)) {
-        Constants.MISSILE_MAX_TTL = opt_value.intValue();
-      }
       if(Utils.findArgValue(args, "7", opt_value)) {
         Constants.MISSILE_MAX_SPEED = opt_value.intValue();
       }
       if(Utils.findArgValue(args, "8", opt_value)) {
         Constants.MISSILE_COOLDOWN = opt_value.intValue();
       }
+      if(Utils.findArgValue(args, "11", opt_value)) {
+        Constants.KILL_AWARD = opt_value.intValue();
+      }
+
+      if(Utils.findArgValue(args, "1", opt_value)) {
+        Constants.SHIP_RADIUS = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "5", opt_value)) {
+        Constants.MISSILE_RADIUS = opt_value.intValue();
+      }
+      if(Utils.findArgValue(args, "6", opt_value)) {
+        Constants.MISSILE_MAX_TTL = opt_value.intValue();
+      }
+
       if(Utils.findArgValue(args, "9", opt_value)) {
         Constants.FRICTION = opt_value.intValue() / 100;
       }
       if(Utils.findArgValue(args, "10", opt_value)) {
         Constants.RADIAN_UNIT = opt_value.intValue() * Math.PI / 180;
       }
-      if(Utils.findArgValue(args, "11", opt_value)) {
-        Constants.KILL_AWARD = opt_value.intValue();
-      }
+
     }
-    double[] res = playNAndMean( nbRuns, p1, p2);
-    String str = "" + res[0];
-    for (int i=1; i<res.length; i++) {
-      str += " " + res[i];
-    }
-    System.out.println(str);
+
+    playOne(2, 5, true);
+
+//    double[] res = playNAndMean( nbRuns, p1, p2);
+//    String str = "" + res[0];
+//    for (int i=1; i<res.length; i++) {
+//      str += " " + res[i];
+//    }
+//    System.out.println(str);
+
+//    System.out.println(t);
   }
 
 //  public static void playOne()
@@ -163,9 +173,13 @@ public class GameTest {
 
   public static double[] playNAndMean(int nbRuns, int id1, int id2)
   {
+
     boolean visuals = false;
     double[][] res = new double[nbRuns][5];
     for (int i=0; i<nbRuns; i++) {
+//      ElapsedCpuTimer t = new ElapsedCpuTimer();
+
+
       StateObservationMulti game = new StateObservationMulti(visuals);
       AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
       String p1 = testedControllers[id1];
@@ -182,15 +196,24 @@ public class GameTest {
       game.playGame(players, rdm.nextInt());
       for (int p=0; p<2; p++) {
         if (game.getAvatars()[p].getWinState() == Types.WINNER.PLAYER_LOSES) {
-          res[i][p*2] = 0;
+          res[i][p * 2] = 0;
         }  else if (game.getAvatars()[p].getWinState() == Types.WINNER.PLAYER_WINS) {
-          res[i][p*2] = 1;
+          res[i][p * 2] = 1;
         } else {
-          res[i][p*2] = 0;
+          if (game.getAvatars()[p].getScore() > game.getAvatars()[1 - p].getScore()) {
+            res[i][p * 2] = 1;
+          } else if (game.getAvatars()[p].getScore() < game.getAvatars()[1 - p].getScore()) {
+            res[i][p * 2] = 0;
+          } else {
+            res[i][p * 2] = 0.5;
+          }
         }
         res[i][p*2+1] = game.getAvatars()[p].getScore();
       }
       res[i][4] = game.getGameTick();
+
+//      System.out.println(t);
+
     }
     return Utils.meanArray(res);
   }

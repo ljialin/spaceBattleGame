@@ -76,6 +76,11 @@ public class StateObservationMulti {
   static public int cheating = -1;
 
 
+  public StateObservationMulti() {
+    reset();
+    this.visible = false;
+  }
+
   public StateObservationMulti(boolean visible) {
     reset();
     this.visible = visible;
