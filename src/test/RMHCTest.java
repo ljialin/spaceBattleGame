@@ -20,10 +20,14 @@ public class RMHCTest {
     Random rdm = new Random();
 
     int[] params = new int[6];
-    for (int i=0; i<params.length; i++) {
-      params[i] = Utils.randomInRange(rdm,
-          GameDesign.bounds[i][0],
-          GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
+    if(args.length>0) {
+      params = GameDesign.initParams[Integer.parseInt(args[0])];
+    } else {
+      for (int i=0; i<params.length; i++) {
+        params[i] = Utils.randomInRange(rdm,
+            GameDesign.bounds[i][0],
+            GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
+      }
     }
     double[] res = GameDesign.playNWithParams(params);
     double bestSoFar = res[0];
@@ -35,7 +39,7 @@ public class RMHCTest {
     double newPoints;
 
     int buffer = 1;
-
+    String str = "";
     int t = 0;
     while (t < GameDesign.nbIter) {
 //      ElapsedCpuTimer timer = new ElapsedCpuTimer();
@@ -45,19 +49,18 @@ public class RMHCTest {
       int mutatedValue = Utils.randomInRange(rdm, GameDesign.bounds[mutatedIdx][0],
           GameDesign.bounds[mutatedIdx][1], GameDesign.bounds[mutatedIdx][2]);
       mutatedParams[mutatedIdx] = mutatedValue;
-      // evaluate offspring
+      /** evaluate offspring */
       res = GameDesign.playNWithParams(mutatedParams);
       newWinRate = res[0];
       newPoints = res[1];
       newFitness = GameDesign.fitness(newWinRate);
 
-      // evaluate parent
+      /** evaluate parent */
       res = GameDesign.playNWithParams(params);
-//      oldFitness = (GameDesign.fitness(oldWinRate)+oldFitness*buffer)/(buffer+1);
       bestSoFarPoints = (res[1] + bestSoFarPoints*buffer) / (buffer+1);
       bestSoFar = (res[0] + bestSoFar*buffer) / (buffer+1);
       bestSoFarFit = GameDesign.fitness(bestSoFar);
-      if(newFitness > bestSoFarFit) {
+      if(newFitness >= bestSoFarFit) {
         params = mutatedParams;
         bestSoFar = newWinRate;
         bestSoFarFit = newFitness;
@@ -69,17 +72,23 @@ public class RMHCTest {
 
       t++;
 
-      String str = "" + t + " " + bestSoFarFit + " " + bestSoFar + " " + bestSoFarPoints;
+      str = "" + t + " " + bestSoFarFit + " " + bestSoFar + " " + bestSoFarPoints;
       for (int i=0; i<params.length; i++) {
         str += " " + params[i];
       }
       System.out.println(str);
 
-//      System.out.println(timer);
-
-//      if(oldFitness==1) {
+//      if(bestSoFarFit==1) {
 //        break;
 //      }
     }
+//    while (t < GameDesign.nbIter) {
+//      str = "" + t + " " + bestSoFarFit + " " + bestSoFar + " " + bestSoFarPoints;
+//      for (int i=0; i<params.length; i++) {
+//        str += " " + params[i];
+//      }
+//      System.out.println(str);
+//      t++;
+//    }
   }
 }

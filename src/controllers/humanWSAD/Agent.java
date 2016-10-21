@@ -55,7 +55,7 @@ public class Agent extends AbstractMultiPlayer implements KeyListener {
       case KeyEvent.VK_D :
         action = Types.ACTIONS.ACTION_RIGHT;
         break;
-      case KeyEvent.VK_SPACE :
+      case KeyEvent.VK_SHIFT :
         action = Types.ACTIONS.ACTION_FIRE;
         break;
       default:
@@ -75,7 +75,7 @@ public class Agent extends AbstractMultiPlayer implements KeyListener {
     if (key == KeyEvent.VK_D) {
       action = Types.ACTIONS.ACTION_NIL;
     }
-    if (key == KeyEvent.VK_SPACE) {
+    if (key == KeyEvent.VK_SHIFT) {
       action = Types.ACTIONS.ACTION_NIL;
     }
   }

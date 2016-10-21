@@ -38,7 +38,8 @@ public class GameTest {
 
   static String[] testedControllers = {
       "rotateAndShoot", "doNothing", "sampleRandom",
-      "sampleOneStepLookAhead", "sampleOLMCTS", "sampleGA"
+      "sampleOneStepLookAhead", "sampleOLMCTS", "sampleGA",
+      "humanArrows"
   };
 
   public static void main(String[] args) {
@@ -52,9 +53,9 @@ public class GameTest {
 
 
 
-    int p1 = 2;
-    int p2 = 5;
-    int nbRuns = 10;
+    int p1 = 5;
+    int p2 = 2;
+    int nbRuns = 100;
 
     MutableDouble opt_value = new MutableDouble(0.0);
     if(args.length>1) {
@@ -106,8 +107,11 @@ public class GameTest {
 
     }
 
-    playOne(2, 5, true);
+//    playOne(6, 2, true);
 
+    for (int i=0; i<100; i++) {
+      playOne(2, 4, true);
+    }
 //    double[] res = playNAndMean( nbRuns, p1, p2);
 //    String str = "" + res[0];
 //    for (int i=1; i<res.length; i++) {
@@ -115,7 +119,6 @@ public class GameTest {
 //    }
 //    System.out.println(str);
 
-//    System.out.println(t);
   }
 
 //  public static void playOne()
@@ -139,6 +142,8 @@ public class GameTest {
     String p2 = testedControllers[id2];
     players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
     players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
+
+//    System.out.println(p1 + " " + p2);
     if (id1==0) {
       game.cheating = 0;
     } else if (id2==0) {
@@ -147,6 +152,9 @@ public class GameTest {
       game.cheating = -1;
     }
     double[][] res = game.playGame(players, rdm.nextInt());
+    System.out.println(game.getGameTick() + " " + game.getWinner(0) + " " + game.getAvatarLives(0) + " " + game.getGameScore(0)
+        + " " + game.getWinner(1) + " " + game.getAvatarLives(1) + " " + game.getGameScore(1));
+
   }
 
   public static void playMany(int nbRuns, int id1, int id2)
@@ -194,28 +202,65 @@ public class GameTest {
         game.cheating = -1;
       }
       game.playGame(players, rdm.nextInt());
+
       for (int p=0; p<2; p++) {
-        if (game.getAvatars()[p].getWinState() == Types.WINNER.PLAYER_LOSES) {
-          res[i][p * 2] = 0;
-        }  else if (game.getAvatars()[p].getWinState() == Types.WINNER.PLAYER_WINS) {
-          res[i][p * 2] = 1;
-        } else {
-          if (game.getAvatars()[p].getScore() > game.getAvatars()[1 - p].getScore()) {
-            res[i][p * 2] = 1;
-          } else if (game.getAvatars()[p].getScore() < game.getAvatars()[1 - p].getScore()) {
-            res[i][p * 2] = 0;
-          } else {
-            res[i][p * 2] = 0.5;
-          }
-        }
         res[i][p*2+1] = game.getAvatars()[p].getScore();
       }
+
+      if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_WINS) {
+        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_LOSES) {
+          res[i][0] = 1;
+          res[i][2] = 0;
+        } else {
+          if (res[i][1] > res[i][3]) {
+            res[i][0] = 1;
+            res[i][2] = 0;
+          } else if (res[i][1] < res[i][3]) {
+            res[i][0] = 0;
+            res[i][2] = 1;
+          } else {
+            res[i][0] = 0.5;
+            res[i][2] = 0.5;
+          }
+        }
+      } else if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_LOSES) {
+        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_WINS) {
+          res[i][0] = 0;
+          res[i][2] = 1;
+        } else {
+          if (res[i][1] > res[i][3]) {
+            res[i][0] = 1;
+            res[i][2] = 0;
+          } else if (res[i][1] < res[i][3]) {
+            res[i][0] = 0;
+            res[i][2] = 1;
+          } else {
+            res[i][0] = 0.5;
+            res[i][2] = 0.5;
+          }
+        }
+      } else {
+        if (res[i][1] > res[i][3]) {
+          res[i][0] = 1;
+          res[i][2] = 0;
+        } else if (res[i][1] < res[i][3]) {
+          res[i][0] = 0;
+          res[i][2] = 1;
+        } else {
+          res[i][0] = 0.5;
+          res[i][2] = 0.5;
+        }
+      }
+
       res[i][4] = game.getGameTick();
 
 //      System.out.println(t);
+//      System.out.println(nbRuns + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] + " " + res[i][4]);
 
     }
-    return Utils.meanArray(res);
+    double[] meanRes = Utils.meanArray(res);
+//    System.out.println(meanRes[0] + " " + meanRes[1] + " " + meanRes[2] + " " + meanRes[3] + " " + meanRes[4]);
+    return meanRes;
   }
 
   private static void dump(double[][] results, String filename)
