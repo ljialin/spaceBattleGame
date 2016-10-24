@@ -23,9 +23,10 @@ public class GameDesign {
   static int[][] bounds = {
       {4, 10, 2},  // SHIP_MAX_SPEED
       {1, 5, 1},  // THRUST_SPEED
-      {1, 5, 1},  // MISSILE_COST
+      {5, 95, 10},  // MISSILE_COST
       {1, 10, 1},  // MISSILE_MAX_SPEED
       {0, 5, 1},  // MISSILE_COOLDOWN
+
       {10, 100, 10},  // KILL_AWARD
 
       {10, 50},  // SHIP_RADIUS
@@ -146,7 +147,7 @@ public class GameDesign {
     Constants.MISSILE_COST = params[2];
     Constants.MISSILE_MAX_SPEED = params[3];
     Constants.MISSILE_COOLDOWN = params[4];
-    Constants.KILL_AWARD = params[5];
+//    Constants.KILL_AWARD = params[5];
 
     double[] res = GameTest.playNAndMean( nbRuns, p1, p2);
 

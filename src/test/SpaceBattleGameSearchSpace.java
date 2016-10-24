@@ -13,7 +13,7 @@ import bandits.SearchSpace;
 public class SpaceBattleGameSearchSpace implements SearchSpace {
   @Override
   public int nDims() {
-    return 6;
+    return 5;
   }
 
   @Override
