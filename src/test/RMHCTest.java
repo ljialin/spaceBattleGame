@@ -14,12 +14,13 @@ import java.util.Random;
  * https://google.github.io/styleguide/javaguide.html
  */
 public class RMHCTest {
+  static SpaceBattleGameSearchSpace searchSpace = new SpaceBattleGameSearchSpace();
 
   public static void main(String[] args) {
 
     Random rdm = new Random();
 
-    int[] params = new int[6];
+    int[] params = new int[searchSpace.nDims()];
     if(args.length>0) {
       params = GameDesign.initParams[Integer.parseInt(args[0])];
     } else {
