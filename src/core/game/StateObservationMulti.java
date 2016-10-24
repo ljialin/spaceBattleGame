@@ -342,7 +342,7 @@ public class StateObservationMulti {
   }
 
   protected void checkCollision() {
-    checkAvatarCollision();
+//    checkAvatarCollision();
     checkAvatarObjectCollision();
     checkObjectCollision();
   }

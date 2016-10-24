@@ -11,7 +11,7 @@ package ontology;
 public class Constants {
   public static  double SHIP_MAX_SPEED = 10; // to optimise, id=2
   public static  double THRUST_SPEED = 4; // to optimise, id=3
-  public static  int MISSILE_COST = 3; // to optimise, id=4
+  public static  int MISSILE_COST = 50; // to optimise, id=4
   public static  int MISSILE_MAX_SPEED = 3; // to optimise, id=7
   public static  int MISSILE_COOLDOWN = 5; // to optimise, id=8
   public static  int KILL_AWARD = 70; // to optimise, id=11
@@ -37,7 +37,7 @@ public class Constants {
   public static final int HEIGHT = 480;
   public static final double VIEW_SCALE = 1.0;
 
-  public static final int MAX_HEALTH_POINTS = 1;
+  public static final int MAX_HEALTH_POINTS = 1000;
   public static final int LIVE_AWARD = 10;
 
   public static final boolean SHOW_ROLLOUTS = true;

@@ -38,7 +38,7 @@ public class GameTest {
 
   static String[] testedControllers = {
       "rotateAndShoot", "doNothing", "sampleRandom",
-      "sampleOneStepLookAhead", "sampleOLMCTS", "sampleGA",
+      "sampleOneStepLookAhead", "sampleGA", "sampleOLMCTS",
       "humanArrows"
   };
 
@@ -109,8 +109,12 @@ public class GameTest {
 
 //    playOne(6, 2, true);
 
-    for (int i=0; i<100; i++) {
-      playOne(2, 4, true);
+    for(int j=0; j<1; j++) {
+      int wins = 0;
+      for (int i = 0; i < 100; i++) {
+        wins += playOne(2, 0, false);
+        System.out.println((i + 1) + "\t" + wins + "\t" + (double) 100 * wins / (i + 1));
+      }
     }
 //    double[] res = playNAndMean( nbRuns, p1, p2);
 //    String str = "" + res[0];
@@ -134,7 +138,7 @@ public class GameTest {
 //    dump(res, "./dat/" + p1 + "_vs_" + p2 + ".dat");
 //  }
 
-  public static void playOne(int id1, int id2, boolean visuals)
+  public static int playOne(int id1, int id2, boolean visuals)
   {
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
@@ -154,7 +158,7 @@ public class GameTest {
     double[][] res = game.playGame(players, rdm.nextInt());
     System.out.println(game.getGameTick() + " " + game.getWinner(0) + " " + game.getAvatarLives(0) + " " + game.getGameScore(0)
         + " " + game.getWinner(1) + " " + game.getAvatarLives(1) + " " + game.getGameScore(1));
-
+    return (game.getGameScore(1) > game.getGameScore(0)? 1 : 0) ;
   }
 
   public static void playMany(int nbRuns, int id1, int id2)
