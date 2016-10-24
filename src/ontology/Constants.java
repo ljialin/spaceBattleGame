@@ -14,7 +14,8 @@ public class Constants {
   public static  int MISSILE_COST = 50; // to optimise, id=4
   public static  int MISSILE_MAX_SPEED = 3; // to optimise, id=7
   public static  int MISSILE_COOLDOWN = 5; // to optimise, id=8
-  public static  int KILL_AWARD = 70; // to optimise, id=11
+
+  public static  int KILL_AWARD = 100; // to optimise, id=11
 
 
 
