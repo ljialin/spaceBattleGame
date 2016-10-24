@@ -211,39 +211,51 @@ public class GameTest {
         res[i][p*2+1] = game.getAvatars()[p].getScore();
       }
 
-      if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_WINS) {
-        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_LOSES) {
-          res[i][0] = 1;
-          res[i][2] = 0;
-        } else {
-          if (res[i][1] > res[i][3]) {
-            res[i][0] = 1;
-            res[i][2] = 0;
-          } else if (res[i][1] < res[i][3]) {
-            res[i][0] = 0;
-            res[i][2] = 1;
-          } else {
-            res[i][0] = 0.5;
-            res[i][2] = 0.5;
-          }
-        }
-      } else if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_LOSES) {
-        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_WINS) {
-          res[i][0] = 0;
-          res[i][2] = 1;
-        } else {
-          if (res[i][1] > res[i][3]) {
-            res[i][0] = 1;
-            res[i][2] = 0;
-          } else if (res[i][1] < res[i][3]) {
-            res[i][0] = 0;
-            res[i][2] = 1;
-          } else {
-            res[i][0] = 0.5;
-            res[i][2] = 0.5;
-          }
-        }
-      } else {
+//      if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_WINS) {
+//        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_LOSES) {
+//          res[i][0] = 1;
+//          res[i][2] = 0;
+//        } else {
+//          if (res[i][1] > res[i][3]) {
+//            res[i][0] = 1;
+//            res[i][2] = 0;
+//          } else if (res[i][1] < res[i][3]) {
+//            res[i][0] = 0;
+//            res[i][2] = 1;
+//          } else {
+//            res[i][0] = 0.5;
+//            res[i][2] = 0.5;
+//          }
+//        }
+//      } else if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_LOSES) {
+//        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_WINS) {
+//          res[i][0] = 0;
+//          res[i][2] = 1;
+//        } else {
+//          if (res[i][1] > res[i][3]) {
+//            res[i][0] = 1;
+//            res[i][2] = 0;
+//          } else if (res[i][1] < res[i][3]) {
+//            res[i][0] = 0;
+//            res[i][2] = 1;
+//          } else {
+//            res[i][0] = 0.5;
+//            res[i][2] = 0.5;
+//          }
+//        }
+//      } else {
+//        if (res[i][1] > res[i][3]) {
+//          res[i][0] = 1;
+//          res[i][2] = 0;
+//        } else if (res[i][1] < res[i][3]) {
+//          res[i][0] = 0;
+//          res[i][2] = 1;
+//        } else {
+//          res[i][0] = 0.5;
+//          res[i][2] = 0.5;
+//        }
+//      }
+
         if (res[i][1] > res[i][3]) {
           res[i][0] = 1;
           res[i][2] = 0;
@@ -254,7 +266,6 @@ public class GameTest {
           res[i][0] = 0.5;
           res[i][2] = 0.5;
         }
-      }
 
       res[i][4] = game.getGameTick();
 

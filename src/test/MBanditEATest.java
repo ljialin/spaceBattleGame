@@ -28,9 +28,10 @@ public class MBanditEATest {
       params = GameDesign.initParams[Integer.parseInt(args[0])];
     } else {
       for (int i=0; i<params.length; i++) {
-        params[i] = Utils.randomInRange(rdm,
-            GameDesign.bounds[i][0],
-            GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
+        params[i] = searchSpace.getValue(i);
+//        params[i] = Utils.randomInRange(rdm,
+//            GameDesign.bounds[i][0],
+//            GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
       }
     }
 

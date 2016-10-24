@@ -25,9 +25,10 @@ public class RMHCTest {
       params = GameDesign.initParams[Integer.parseInt(args[0])];
     } else {
       for (int i=0; i<params.length; i++) {
-        params[i] = Utils.randomInRange(rdm,
-            GameDesign.bounds[i][0],
-            GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
+        params[i] = searchSpace.getValue(i);
+//        params[i] = Utils.randomInRange(rdm,
+//            GameDesign.bounds[i][0],
+//            GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
       }
     }
     double[] res = GameDesign.playNWithParams(params);
@@ -47,8 +48,9 @@ public class RMHCTest {
 
       int[] mutatedParams = params;
       int mutatedIdx = rdm.nextInt(params.length);
-      int mutatedValue = Utils.randomInRange(rdm, GameDesign.bounds[mutatedIdx][0],
-          GameDesign.bounds[mutatedIdx][1], GameDesign.bounds[mutatedIdx][2]);
+      int mutatedValue = searchSpace.getValue(mutatedIdx);
+//      int mutatedValue = Utils.randomInRange(rdm, GameDesign.bounds[mutatedIdx][0],
+//          GameDesign.bounds[mutatedIdx][1], GameDesign.bounds[mutatedIdx][2]);
       mutatedParams[mutatedIdx] = mutatedValue;
       /** evaluate offspring */
       res = GameDesign.playNWithParams(mutatedParams);
