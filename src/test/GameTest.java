@@ -107,15 +107,17 @@ public class GameTest {
 
     }
 
-//    playOne(6, 2, true);
+    playOne(5, 0, false, 0);
 
-    for(int j=0; j<1; j++) {
-      int wins = 0;
-      for (int i = 0; i < 100; i++) {
-        wins += playOne(2, 0, false);
-        System.out.println((i + 1) + "\t" + wins + "\t" + (double) 100 * wins / (i + 1));
-      }
-    }
+//    for(int j=0; j<1; j++) {
+//      int wins = 0;
+//      for (int i = 0; i < 100; i++) {
+//        wins += playOne(2, 0, false);
+//        System.out.println((i + 1) + "\t" + wins + "\t" + (double) 100 * wins / (i + 1));
+//      }
+//    }
+
+
 //    double[] res = playNAndMean( nbRuns, p1, p2);
 //    String str = "" + res[0];
 //    for (int i=1; i<res.length; i++) {
@@ -138,7 +140,7 @@ public class GameTest {
 //    dump(res, "./dat/" + p1 + "_vs_" + p2 + ".dat");
 //  }
 
-  public static int playOne(int id1, int id2, boolean visuals)
+  public static int playOne(int id1, int id2, boolean visuals, int run)
   {
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
@@ -147,7 +149,6 @@ public class GameTest {
     players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
     players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
 
-//    System.out.println(p1 + " " + p2);
     if (id1==0) {
       game.cheating = 0;
     } else if (id2==0) {
@@ -155,9 +156,27 @@ public class GameTest {
     } else {
       game.cheating = -1;
     }
-    double[][] res = game.playGame(players, rdm.nextInt());
-    System.out.println(game.getGameTick() + " " + game.getWinner(0) + " " + game.getAvatarLives(0) + " " + game.getGameScore(0)
-        + " " + game.getWinner(1) + " " + game.getAvatarLives(1) + " " + game.getGameScore(1));
+    game.playGame(players, rdm.nextInt());
+
+    double state0;
+    double state1;
+    if (game.getGameScore(0) > game.getGameScore(1)) {
+      state0 = 1;
+      state1 = 0;
+    } else if (game.getGameScore(0) < game.getGameScore(1)) {
+      state0 = 0;
+      state1 = 1;
+    } else {
+      state0 = 0.5;
+      state1 = 0.5;
+    }
+    System.out.println(run
+        + " " + state0 + " " + game.getGameScore(0)
+        + " " + state1 + " " + game.getGameScore(1)
+        + " " + Constants.SHIP_MAX_SPEED
+        + " " + Constants.THRUST_SPEED + " " + Constants.MISSILE_COST
+        + " " + Constants.MISSILE_MAX_SPEED
+        + " " + Constants.MISSILE_COOLDOWN);
     return (game.getGameScore(1) > game.getGameScore(0)? 1 : 0) ;
   }
 

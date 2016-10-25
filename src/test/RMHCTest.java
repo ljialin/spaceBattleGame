@@ -48,6 +48,7 @@ public class RMHCTest {
 
       int[] mutatedParams = params;
       int mutatedIdx = rdm.nextInt(params.length);
+//      System.out.println(params.length + " " + mutatedIdx);
       int mutatedValue = searchSpace.getValue(mutatedIdx);
 //      int mutatedValue = Utils.randomInRange(rdm, GameDesign.bounds[mutatedIdx][0],
 //          GameDesign.bounds[mutatedIdx][1], GameDesign.bounds[mutatedIdx][2]);
@@ -81,17 +82,6 @@ public class RMHCTest {
       }
       System.out.println(str);
 
-//      if(bestSoFarFit==1) {
-//        break;
-//      }
     }
-//    while (t < GameDesign.nbIter) {
-//      str = "" + t + " " + bestSoFarFit + " " + bestSoFar + " " + bestSoFarPoints;
-//      for (int i=0; i<params.length; i++) {
-//        str += " " + params[i];
-//      }
-//      System.out.println(str);
-//      t++;
-//    }
   }
 }
