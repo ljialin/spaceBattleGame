@@ -11,6 +11,8 @@ import tools.ElapsedCpuTimer;
  */
 public class CompetitionParameters
 {
+
+  public static int MCTS_ITER = 350;
   /**
    * Milliseconds allowed per controller action.
    */

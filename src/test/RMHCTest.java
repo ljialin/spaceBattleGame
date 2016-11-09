@@ -15,23 +15,29 @@ import java.util.Random;
  */
 public class RMHCTest {
   static SpaceBattleGameSearchSpace searchSpace = new SpaceBattleGameSearchSpace();
+  static int budget = 10000;
 
   public static void main(String[] args) {
 
     Random rdm = new Random();
 
     int[] params = new int[searchSpace.nDims()];
-    if(args.length>0) {
-      params = GameDesign.initParams[Integer.parseInt(args[0])];
+    int ai1 = -1;
+    int ai2 = -1;
+    int resample = 1;
+    int startPoint = -1;
+    if(args.length==4) {
+      ai1 = Integer.parseInt(args[0]);
+      ai2 = Integer.parseInt(args[1]);
+      resample = Integer.parseInt(args[2]);
+      startPoint = Integer.parseInt(args[3]);
+      params = GameDesign.initParams[startPoint];
     } else {
       for (int i=0; i<params.length; i++) {
-        params[i] = searchSpace.getValue(i);
-//        params[i] = Utils.randomInRange(rdm,
-//            GameDesign.bounds[i][0],
-//            GameDesign.bounds[i][1], GameDesign.bounds[i][2]);
+        params[i] = searchSpace.getRandomValue(i);
       }
     }
-    double[] res = GameDesign.playNWithParams(params);
+    double[] res = GameDesign.playNWithParams(ai1, ai2, params, resample);
     double bestSoFar = res[0];
     double bestSoFarFit = GameDesign.fitness(bestSoFar);
     double bestSoFarPoints = res[1];
@@ -43,24 +49,28 @@ public class RMHCTest {
     int buffer = 1;
     String str = "";
     int t = 0;
-    while (t < GameDesign.nbIter) {
-//      ElapsedCpuTimer timer = new ElapsedCpuTimer();
+    int T = (int) Math.floor(budget/2/resample);
+
+    str = resample + " " + t + " " + bestSoFarFit + " " + bestSoFarPoints;
+    for (int i=0; i<params.length; i++) {
+      str += " " + params[i];
+    }
+    System.out.println(str);
+
+    while (t < T) {
 
       int[] mutatedParams = params;
       int mutatedIdx = rdm.nextInt(params.length);
-//      System.out.println(params.length + " " + mutatedIdx);
-      int mutatedValue = searchSpace.getValue(mutatedIdx);
-//      int mutatedValue = Utils.randomInRange(rdm, GameDesign.bounds[mutatedIdx][0],
-//          GameDesign.bounds[mutatedIdx][1], GameDesign.bounds[mutatedIdx][2]);
+      int mutatedValue = searchSpace.getRandomValue(mutatedIdx);
       mutatedParams[mutatedIdx] = mutatedValue;
       /** evaluate offspring */
-      res = GameDesign.playNWithParams(mutatedParams);
+      res = GameDesign.playNWithParams(ai1, ai2, mutatedParams, resample);
       newWinRate = res[0];
       newPoints = res[1];
       newFitness = GameDesign.fitness(newWinRate);
 
       /** evaluate parent */
-      res = GameDesign.playNWithParams(params);
+      res = GameDesign.playNWithParams(ai1, ai2, params, resample);
       bestSoFarPoints = (res[1] + bestSoFarPoints*buffer) / (buffer+1);
       bestSoFar = (res[0] + bestSoFar*buffer) / (buffer+1);
       bestSoFarFit = GameDesign.fitness(bestSoFar);
@@ -76,7 +86,7 @@ public class RMHCTest {
 
       t++;
 
-      str = "" + t + " " + bestSoFarFit + " " + bestSoFar + " " + bestSoFarPoints;
+      str = resample + " " + t + " " + bestSoFarFit + " " + bestSoFarPoints;
       for (int i=0; i<params.length; i++) {
         str += " " + params[i];
       }

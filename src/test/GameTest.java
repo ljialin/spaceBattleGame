@@ -25,7 +25,7 @@ import java.util.Random;
  * https://google.github.io/styleguide/javaguide.html
  */
 public class GameTest {
-  static Random rdm = new Random();
+
 
   static String doNothingController = "doNothing";
   static String olmctsController = "sampleOLMCTS";
@@ -39,75 +39,62 @@ public class GameTest {
   static String[] testedControllers = {
       "rotateAndShoot", "doNothing", "sampleRandom",
       "sampleOneStepLookAhead", "sampleGA", "sampleOLMCTS",
-      "humanArrows"
+      "sampleOLMCTStwoT", "sampleOLMCTShalfT"
   };
 
   public static void main(String[] args) {
-//    ElapsedCpuTimer t = new ElapsedCpuTimer();
-    //for (int i=0; i<testedControllers.length; i++) {
-    //  for (int j=1; j<testedControllers.length; j++) {
-    //    playMany(nbRuns, i, j);
-    //  }
-    //}
-//    playMany(1,0,3);
 
+//    MutableDouble opt_value = new MutableDouble(0.0);
+//    if(args.length>1) {
+//      if(Utils.findArgValue(args, "runs", opt_value)) {
+//        nbRuns = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "p1", opt_value)) {
+//        p1 = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "p2", opt_value)) {
+//        p2 = opt_value.intValue();
+//      }
+//
+//      if(Utils.findArgValue(args, "2", opt_value)) {
+//        Constants.SHIP_MAX_SPEED = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "3", opt_value)) {
+//        Constants.THRUST_SPEED = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "4", opt_value)) {
+//        Constants.MISSILE_COST = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "7", opt_value)) {
+//        Constants.MISSILE_MAX_SPEED = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "8", opt_value)) {
+//        Constants.MISSILE_COOLDOWN = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "11", opt_value)) {
+//        Constants.KILL_AWARD = opt_value.intValue();
+//      }
+//
+//      if(Utils.findArgValue(args, "1", opt_value)) {
+//        Constants.SHIP_RADIUS = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "5", opt_value)) {
+//        Constants.MISSILE_RADIUS = opt_value.intValue();
+//      }
+//      if(Utils.findArgValue(args, "6", opt_value)) {
+//        Constants.MISSILE_MAX_TTL = opt_value.intValue();
+//      }
+//
+//      if(Utils.findArgValue(args, "9", opt_value)) {
+//        Constants.FRICTION = opt_value.intValue() / 100;
+//      }
+//      if(Utils.findArgValue(args, "10", opt_value)) {
+//        Constants.RADIAN_UNIT = opt_value.intValue() * Math.PI / 180;
+//      }
+//
+//    }
 
-
-    int p1 = 5;
-    int p2 = 2;
-    int nbRuns = 100;
-
-    MutableDouble opt_value = new MutableDouble(0.0);
-    if(args.length>1) {
-      if(Utils.findArgValue(args, "runs", opt_value)) {
-        nbRuns = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "p1", opt_value)) {
-        p1 = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "p2", opt_value)) {
-        p2 = opt_value.intValue();
-      }
-
-      if(Utils.findArgValue(args, "2", opt_value)) {
-        Constants.SHIP_MAX_SPEED = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "3", opt_value)) {
-        Constants.THRUST_SPEED = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "4", opt_value)) {
-        Constants.MISSILE_COST = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "7", opt_value)) {
-        Constants.MISSILE_MAX_SPEED = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "8", opt_value)) {
-        Constants.MISSILE_COOLDOWN = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "11", opt_value)) {
-        Constants.KILL_AWARD = opt_value.intValue();
-      }
-
-      if(Utils.findArgValue(args, "1", opt_value)) {
-        Constants.SHIP_RADIUS = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "5", opt_value)) {
-        Constants.MISSILE_RADIUS = opt_value.intValue();
-      }
-      if(Utils.findArgValue(args, "6", opt_value)) {
-        Constants.MISSILE_MAX_TTL = opt_value.intValue();
-      }
-
-      if(Utils.findArgValue(args, "9", opt_value)) {
-        Constants.FRICTION = opt_value.intValue() / 100;
-      }
-      if(Utils.findArgValue(args, "10", opt_value)) {
-        Constants.RADIAN_UNIT = opt_value.intValue() * Math.PI / 180;
-      }
-
-    }
-
-    playOne(5, 0, false, 0);
+    playOne(5, 0, true, 0);
 
 //    for(int j=0; j<1; j++) {
 //      int wins = 0;
@@ -142,6 +129,7 @@ public class GameTest {
 
   public static int playOne(int id1, int id2, boolean visuals, int run)
   {
+    Random rdm = new Random();
     StateObservationMulti game = new StateObservationMulti(visuals);
     AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
     String p1 = testedControllers[id1];
@@ -156,6 +144,7 @@ public class GameTest {
     } else {
       game.cheating = -1;
     }
+
     game.playGame(players, rdm.nextInt());
 
     double state0;
@@ -182,9 +171,11 @@ public class GameTest {
 
   public static void playMany(int nbRuns, int id1, int id2)
   {
+
     boolean visuals = false;
     for (int i=0; i<nbRuns; i++) {
-      StateObservationMulti game = new StateObservationMulti(visuals);
+      Random rdm = new Random();
+      StateObservationMulti game = new StateObservationMulti(false);
       AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
       String p1 = testedControllers[id1];
       String p2 = testedControllers[id2];
@@ -198,6 +189,7 @@ public class GameTest {
         game.cheating = -1;
       }
       double[][] res = game.playGame(players, rdm.nextInt());
+
       dump(res, "./dat/" + p1 + "_vs_" + p2 + "_run" + (i+1) + ".dat");
     }
   }
@@ -206,12 +198,11 @@ public class GameTest {
   {
 
     boolean visuals = false;
-    double[][] res = new double[nbRuns][5];
+    double[][] res = new double[nbRuns][4];
     for (int i=0; i<nbRuns; i++) {
-//      ElapsedCpuTimer t = new ElapsedCpuTimer();
+      Random rdm = new Random();
 
-
-      StateObservationMulti game = new StateObservationMulti(visuals);
+      StateObservationMulti game = new StateObservationMulti(false);
       AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
       String p1 = testedControllers[id1];
       String p2 = testedControllers[id2];
@@ -225,75 +216,27 @@ public class GameTest {
         game.cheating = -1;
       }
       game.playGame(players, rdm.nextInt());
-
-      for (int p=0; p<2; p++) {
-        res[i][p*2+1] = game.getAvatars()[p].getScore();
+      double state0;
+      double state1;
+      if (game.getGameScore(0) > game.getGameScore(1)) {
+        state0 = 1;
+        state1 = 0;
+      } else if (game.getGameScore(0) < game.getGameScore(1)) {
+        state0 = 0;
+        state1 = 1;
+      } else {
+        state0 = 0.5;
+        state1 = 0.5;
       }
-
-//      if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_WINS) {
-//        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_LOSES) {
-//          res[i][0] = 1;
-//          res[i][2] = 0;
-//        } else {
-//          if (res[i][1] > res[i][3]) {
-//            res[i][0] = 1;
-//            res[i][2] = 0;
-//          } else if (res[i][1] < res[i][3]) {
-//            res[i][0] = 0;
-//            res[i][2] = 1;
-//          } else {
-//            res[i][0] = 0.5;
-//            res[i][2] = 0.5;
-//          }
-//        }
-//      } else if (game.getAvatars()[0].getWinState() == Types.WINNER.PLAYER_LOSES) {
-//        if (game.getAvatars()[1].getWinState() == Types.WINNER.PLAYER_WINS) {
-//          res[i][0] = 0;
-//          res[i][2] = 1;
-//        } else {
-//          if (res[i][1] > res[i][3]) {
-//            res[i][0] = 1;
-//            res[i][2] = 0;
-//          } else if (res[i][1] < res[i][3]) {
-//            res[i][0] = 0;
-//            res[i][2] = 1;
-//          } else {
-//            res[i][0] = 0.5;
-//            res[i][2] = 0.5;
-//          }
-//        }
-//      } else {
-//        if (res[i][1] > res[i][3]) {
-//          res[i][0] = 1;
-//          res[i][2] = 0;
-//        } else if (res[i][1] < res[i][3]) {
-//          res[i][0] = 0;
-//          res[i][2] = 1;
-//        } else {
-//          res[i][0] = 0.5;
-//          res[i][2] = 0.5;
-//        }
-//      }
-
-        if (res[i][1] > res[i][3]) {
-          res[i][0] = 1;
-          res[i][2] = 0;
-        } else if (res[i][1] < res[i][3]) {
-          res[i][0] = 0;
-          res[i][2] = 1;
-        } else {
-          res[i][0] = 0.5;
-          res[i][2] = 0.5;
-        }
-
-      res[i][4] = game.getGameTick();
-
-//      System.out.println(t);
-//      System.out.println(nbRuns + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] + " " + res[i][4]);
+      res[i][0] = state0;
+      res[i][1] = game.getGameScore(0);
+      res[i][2] = state1;
+      res[i][3] = game.getGameScore(1);
+//      System.out.println(nbRuns + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] );
 
     }
     double[] meanRes = Utils.meanArray(res);
-//    System.out.println(meanRes[0] + " " + meanRes[1] + " " + meanRes[2] + " " + meanRes[3] + " " + meanRes[4]);
+//    System.out.println(nbRuns + " " + meanRes[0] + " " + meanRes[1] + " " + meanRes[2] + " " + meanRes[3] );
     return meanRes;
   }
 

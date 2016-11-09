@@ -1,5 +1,6 @@
 package ontology.asteroids;
 
+import ontology.Constants;
 import tools.Utils;
 import ontology.Types;
 
@@ -23,14 +24,20 @@ public class WeaponSystem {
 
   WeaponSystem(int weaponId) {
     this.weaponId = weaponId;
-    this.power = Types.RESOURCE_INFO.get(weaponId)[0];
-    this.cost = Types.RESOURCE_INFO.get(weaponId)[1];
-    this.resource = Types.RESOURCE_INFO.get(weaponId)[2];
     this.cooldown = 0;
+    this.resource = Constants.MISSILE_MAX_RESOURCE;
+    this.power = Constants.MISSILE_DESTRUCTIVE_POWER;
+    this.cost = Constants.MISSILE_COST;
+
+//    this.power = Types.RESOURCE_INFO.get(weaponId)[0];
+//    this.cost = Types.RESOURCE_INFO.get(weaponId)[1];
+//    this.resource = Types.RESOURCE_INFO.get(weaponId)[2];
+//    this.cooldown = 0;
   }
 
   public void resetCooldown() {
-    this.cooldown = Types.RESOURCE_INFO.get(weaponId)[3];
+    this.cooldown = Constants.MISSILE_COOLDOWN;
+//    this.cooldown = Types.RESOURCE_INFO.get(weaponId)[3];
   }
 
   public boolean fire() {
@@ -70,11 +77,13 @@ public class WeaponSystem {
   }
 
   public int getCooldown() {
-    return cooldown;
+    return Constants.MISSILE_COOLDOWN;
   }
 
   public void update() {
     this.cooldown--;
-    this.cooldown = Utils.clamp(0, this.cooldown, Types.RESOURCE_INFO.get(weaponId)[3]);
+    this.cooldown = Utils.clamp(0, this.cooldown, Constants.MISSILE_COOLDOWN);
+
+//    this.cooldown = Utils.clamp(0, this.cooldown, Types.RESOURCE_INFO.get(weaponId)[3]);
   }
 }

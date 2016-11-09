@@ -9,17 +9,17 @@ package ontology;
  * https://google.github.io/styleguide/javaguide.html
  */
 public class Constants {
-  public static  double SHIP_MAX_SPEED = 10; // to optimise, id=2
-  public static  double THRUST_SPEED = 4; // to optimise, id=3
-  public static  int MISSILE_COST = 3; // to optimise, id=4
-  public static  int MISSILE_MAX_SPEED = 3; // to optimise, id=7
-  public static  int MISSILE_COOLDOWN = 5; // to optimise, id=8
-
-  public static  int KILL_AWARD = 70; // to optimise, id=11
-
-
-
+  public static double SHIP_MAX_SPEED = 4; // to optimise, id=2
+  public static double THRUST_SPEED = 1; // to optimise, id=3
+  public static int MISSILE_COST = 10; // to optimise, id=4
+  public static int MISSILE_MAX_SPEED = 5; // to optimise, id=7
+  public static int MISSILE_COOLDOWN = 10; // to optimise, id=8
   public static int SHIP_RADIUS = 20; // to optimise, id=1
+
+  public static int KILL_AWARD = 100; // to optimise, id=11
+
+
+
   public static final double SHIP_SCALE = 1;
   public static final double MAX_REPULSE_FORCE = 1.0;
 

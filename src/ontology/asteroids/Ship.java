@@ -74,7 +74,7 @@ public class Ship extends GameObject {
     this.color = Types.PLAYER_COLOR[playerId];
     this.cost = 0.0;
     this.nbKills = 0;
-    this.destructivePower = Constants.MAX_HEALTH_POINTS;
+    this.destructivePower = Constants.MISSILE_DESTRUCTIVE_POWER;
     this.resources = new TreeMap<>();
 //    this.resources.put(Constants.WEAPON_ID_MISSILE,Constants.MISSILE_MAX_RESOURCE);
     this.weaponSystems = new ArrayList<>();
@@ -266,6 +266,16 @@ public class Ship extends GameObject {
 
   public double getCost() {
     return this.cost;
+  }
+
+  public double getCostUnit() {
+    WeaponSystem ws = getWeapon(Constants.WEAPON_ID_MISSILE);
+    return ws.getCost();
+  }
+
+  public int getCooldown() {
+    WeaponSystem ws = getWeapon(Constants.WEAPON_ID_MISSILE);
+    return ws.getCooldown();
   }
 
   public int getHealthPoints() {

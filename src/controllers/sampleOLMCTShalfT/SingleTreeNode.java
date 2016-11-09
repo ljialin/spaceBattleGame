@@ -1,12 +1,12 @@
-package controllers.sampleOLMCTS;
+package controllers.sampleOLMCTShalfT;
 
-import java.util.Random;
-
-import core.game.StateObservationMulti;
 import controllers.multiPlayer.heuristics.Heuristics;
+import core.game.StateObservationMulti;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.Utils;
+
+import java.util.Random;
 
 public class SingleTreeNode
 {
@@ -213,7 +213,7 @@ public class SingleTreeNode
   public double myHeuristicScore(StateObservationMulti a_gameState) {
     double rawScore = a_gameState.getGameScore(Agent.id);
     double distScore = Heuristics.calcDistScore(
-        a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1-Agent.id]);
+        a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1- Agent.id]);
 //    System.out.println("Raw score=" + rawScore);
 //    return (rawScore + distScore);
     return rawScore;

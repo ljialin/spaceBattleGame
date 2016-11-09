@@ -1,13 +1,13 @@
-package controllers.sampleOLMCTS;
-
-import java.util.ArrayList;
-import java.util.Random;
+package controllers.sampleOLMCTShalfT;
 
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +19,7 @@ import tools.ElapsedCpuTimer;
 public class Agent extends AbstractMultiPlayer {
 
   public static int[] NUM_ACTIONS;
-  public static int MCTS_ITERATIONS = CompetitionParameters.MCTS_ITER;
+  public static int MCTS_ITERATIONS = (int) CompetitionParameters.MCTS_ITER/2;
   public static int ROLLOUT_DEPTH = 10;
   public static double K = Math.sqrt(2);
   public static double REWARD_DISCOUNT = 1.00;

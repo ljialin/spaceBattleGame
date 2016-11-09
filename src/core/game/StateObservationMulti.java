@@ -1,5 +1,6 @@
 package core.game;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import competition.CompetitionParameters;
 import core.player.AbstractMultiPlayer;
 import core.termination.Termination;
@@ -7,6 +8,8 @@ import ontology.Constants;
 import ontology.Types;
 import ontology.asteroids.*;
 import tools.*;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -234,6 +237,8 @@ public class StateObservationMulti {
 //    System.out.println("StateObservationMulti : all key added !");
 
     waitTillReady();
+
+//    System.out.println("GAME: " + this.avatars[0].getCooldown());
 
     while (!isEnded) {
 //      System.out.println("StateObservationMulti : gameTick=" + gameTick);

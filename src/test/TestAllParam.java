@@ -1,5 +1,7 @@
 package test;
 
+import core.game.StateObservationMulti;
+import core.player.AbstractMultiPlayer;
 import ontology.Constants;
 import tools.Utils;
 
@@ -37,10 +39,11 @@ public class TestAllParam {
         Constants.MISSILE_COST = params[2];
         Constants.MISSILE_MAX_SPEED = params[3];
         Constants.MISSILE_COOLDOWN = params[4];
-
-        GameTest.playOne(GameDesign.p1, GameDesign.p2, false, run);
+        Constants.SHIP_RADIUS = params[5];
+        GameTest.playOne(5, 6, false, run);
       }
     }
 
   }
+
 }
