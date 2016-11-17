@@ -36,6 +36,7 @@ public class GameDesign {
       {1, 60}  // RADIAN_UNIT
   };
 
+
   static int[][] initParams = {
       { 10, 3, 100, 7, 6, 50},
       { 10, 5, 0, 9, 6, 50},

@@ -39,7 +39,7 @@ public class GameTest {
   static String[] testedControllers = {
       "rotateAndShoot", "doNothing", "sampleRandom",
       "sampleOneStepLookAhead", "sampleGA", "sampleOLMCTS",
-      "sampleOLMCTStwoT", "sampleOLMCTShalfT"
+      "sampleOLMCTStwoT", "sampleOLMCTShalfT", "humanArrows"
   };
 
   public static void main(String[] args) {
@@ -93,6 +93,15 @@ public class GameTest {
 //      }
 //
 //    }
+//    int[] params = { 4, 4, 1, 2, 5, 20}; //ValidParams.optimalParams50[33];
+//    int[] params = { 10, 5, 1, 1, 4, 20};
+    int[] params = { 10, 4, 1, 2, 5, 20};
+    Constants.SHIP_MAX_SPEED = params[0];
+    Constants.THRUST_SPEED = params[1];
+    Constants.MISSILE_COST = params[2];
+    Constants.MISSILE_MAX_SPEED = params[3];
+    Constants.MISSILE_COOLDOWN = params[4];
+    Constants.SHIP_RADIUS = params[5];
 
     playOne(5, 0, true, 0);
 
@@ -232,7 +241,7 @@ public class GameTest {
       res[i][1] = game.getGameScore(0);
       res[i][2] = state1;
       res[i][3] = game.getGameScore(1);
-//      System.out.println(nbRuns + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] );
+      System.out.println(i + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] );
 
     }
     double[] meanRes = Utils.meanArray(res);

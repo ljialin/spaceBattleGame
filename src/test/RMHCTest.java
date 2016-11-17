@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class RMHCTest {
   static SpaceBattleGameSearchSpace searchSpace = new SpaceBattleGameSearchSpace();
-  static int budget = 10000;
+  static int budget = 2000;
 
   public static void main(String[] args) {
 
