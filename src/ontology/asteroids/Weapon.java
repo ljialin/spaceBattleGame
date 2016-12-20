@@ -1,9 +1,8 @@
 package ontology.asteroids;
 
-import ontology.Constants;
 import tools.Vector2d;
+import java.awt.Graphics2D;
 
-import java.awt.*;
 
 /**
  * Created by Jialin Liu on 04/10/16.

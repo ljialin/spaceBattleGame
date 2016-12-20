@@ -1,18 +1,32 @@
 package core.game;
 
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import competition.CompetitionParameters;
 import core.player.AbstractMultiPlayer;
 import core.termination.Termination;
 import ontology.Constants;
 import ontology.Types;
-import ontology.asteroids.*;
-import tools.*;
+import ontology.asteroids.Ship;
+import ontology.asteroids.GameObject;
+import ontology.asteroids.View;
 
-import javax.swing.*;
-import java.awt.*;
+import ontology.asteroids.Missile;
+
+import tools.ElapsedCpuTimer;
+import tools.JEasyFrame;
+import tools.Vector2d;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+
+
 import java.awt.event.KeyListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Random;
+
 
 /**
  * Created by Jialin Liu on 04/10/2016.

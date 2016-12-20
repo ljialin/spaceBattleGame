@@ -3,7 +3,9 @@ package ontology;
 import tools.Direction;
 import tools.Vector2d;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Color;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
