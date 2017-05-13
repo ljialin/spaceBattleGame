@@ -13,6 +13,7 @@ public class GameTickTest {
 
         ElapsedTimer timer = new ElapsedTimer();
 
+        int gameTickMillis = 40;
         int nTicks = 500;
         int nTrials = 10000;
 
@@ -42,13 +43,10 @@ public class GameTickTest {
         }
 
         int totalTicks = nTicks * nTrials;
-
         System.out.format("Made %d ticks\n", totalTicks);
-
         System.out.format("Ticks per milli-second: %.1f\n\n", totalTicks / (double) timer.elapsed());
 //        System.out.format("Game tick time = %d ms\n", (int) gameTick);
-//        System.out.format("Copies per milli-second: %d\n\n", (int) (gameTick * nCopies / (double) timer.elapsed()));
-
+        System.out.format("Copies per game tick:   %d\n\n", (int) (gameTickMillis * totalTicks / (double) timer.elapsed()));
         System.out.println(timer);
 
     }

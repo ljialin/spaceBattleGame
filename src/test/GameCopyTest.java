@@ -33,7 +33,7 @@ public class GameCopyTest {
 
         System.out.format("Copies per milli-second: %.1f\n\n", nCopies / (double) timer.elapsed());
         System.out.format("Game tick time = %d ms\n",(int) gameTick);
-        System.out.format("Copies per milli-second: %d\n\n", (int) (gameTick * nCopies / (double) timer.elapsed()));
+        System.out.format("Copies per game tick: %d\n\n", (int) (gameTick * nCopies / (double) timer.elapsed()));
 
         System.out.println(timer);
 
