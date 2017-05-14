@@ -9,7 +9,7 @@ import java.util.TreeMap;
  * <p>
  * The purpose of this class is simple: it is to log various aspects of the game
  */
-public class GameLogger {
+public class EntropyLogger {
     // keep them all just in case
     // but also keep a TreeList of actions
 
@@ -17,15 +17,11 @@ public class GameLogger {
         Random random = new Random();
         int nSamples = 100;
         int nValues = 10;
-        GameLogger logger = new GameLogger();
+        EntropyLogger logger = new EntropyLogger();
         for (int i = 0; i < nSamples; i++) {
             logger.addAction(random.nextInt(nValues));
         }
         System.out.println(logger.frequencyReport());
-        double entropy = entropy(logger.pVec());
-
-        System.out.format("Entropy:   \t %.5f Shannons\n", entropy);
-        System.out.format("Normalised:\t %.5f \n", entropy / log2(nValues));
     }
 
     public double[] pVec() {
@@ -42,6 +38,18 @@ public class GameLogger {
             p[i] /= tot;
         return p;
     }
+
+    public double entropy() {
+        return entropy(pVec());
+    }
+
+    // normalise by log_2 of size of alphabet
+    public double normalisedEntropy(int nSymbols) {
+        if (nSymbols <= 1) return 0;
+        return entropy() / log2(nSymbols);
+    }
+
+
 
     public static double entropy(double[] p) {
         //assumes that p is a valid probability vector
@@ -70,7 +78,7 @@ public class GameLogger {
     TreeMap<Comparable, Counter> countMap;
 
 
-    public GameLogger() {
+    public EntropyLogger() {
         actions = new ArrayList<>();
         countMap = new TreeMap<>();
     }
@@ -81,9 +89,11 @@ public class GameLogger {
         for (Comparable key : countMap.keySet()) {
             sb.append(String.format("%s \t %5d\n", key, countMap.get(key).count));
         }
+        sb.append(String.format("Entropy:   \t %.5f Shannons\n", entropy()));
+        sb.append("Semi-normalised means by the number of symbols that occured, \nnot by the number of symbols in the alphabet\n");
+        sb.append(String.format("Semi-Normalised: \t %.5f \n", normalisedEntropy(countMap.size())));
         return sb.toString();
     }
-
 
     public void addAction(int action) {
         actions.add(action);

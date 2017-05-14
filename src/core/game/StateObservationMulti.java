@@ -3,7 +3,9 @@ package core.game;
 import competition.CompetitionParameters;
 import core.player.AbstractMultiPlayer;
 import core.termination.Termination;
-import gamelog.GameLogger;
+import gamelog.EntropyLogger;
+import gamelog.FullGameLogger;
+import gamelog.SampleLogger;
 import ontology.Constants;
 import ontology.Types;
 import ontology.asteroids.Ship;
@@ -304,10 +306,8 @@ public class StateObservationMulti {
         return scoreRecord;
     }
 
-    // just put this in quick and dirty for now
-    // todo: add other loggers: for other players
-    // todo: also add logger for game state features
-    public static GameLogger playerOneActions = new GameLogger();
+    // can set this externally to null to avoid anylogging
+    public static FullGameLogger gameLogger = new SampleLogger();
 
     public void update() {
         ElapsedCpuTimer elapsedTimer = new ElapsedCpuTimer();
@@ -318,10 +318,8 @@ public class StateObservationMulti {
             actions[i] = this.avatars[i].player.act(this.copy(), elapsedTimer);
         }
 
-        // todo: use other loggers: for other players
-        // todo: use other logger(s) for game state features such as avatar position(s)
-        playerOneActions.addAction(actions[0].ordinal());
 
+        gameLogger.log(this, actions);
 
         advance(actions);
 

@@ -3,11 +3,8 @@ package test;
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
-import gamelog.GameLogger;
 import ontology.Constants;
-import ontology.Types;
 import tools.ElapsedCpuTimer;
-import tools.MutableDouble;
 import tools.Utils;
 
 import java.io.BufferedWriter;
@@ -104,7 +101,7 @@ public class GameTest {
         Constants.MISSILE_COOLDOWN = params[4];
         Constants.SHIP_RADIUS = params[5];
 
-        playOne(0, 2, false, 0);
+        playOne(7, 2, true, 0);
 
         // now print out the entropy log
 
