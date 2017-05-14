@@ -10,10 +10,10 @@ package ontology;
  */
 public class Constants {
   public static double SHIP_MAX_SPEED = 10; // to optimise, id=2
-  public static double THRUST_SPEED = 1; // to optimise, id=3
+  public static double THRUST_SPEED = 5; // to optimise, id=3
   public static int MISSILE_COST = 1; // to optimise, id=4
-  public static int MISSILE_MAX_SPEED = 5; // to optimise, id=7
-  public static int MISSILE_COOLDOWN = 10; // to optimise, id=8
+  public static int MISSILE_MAX_SPEED = 1; // to optimise, id=7
+  public static int MISSILE_COOLDOWN = 4; // to optimise, id=8
   public static int SHIP_RADIUS = 20; // to optimise, id=1
 
   public static int KILL_AWARD = 100; // to optimise, id=11

@@ -6,7 +6,7 @@ import tools.ElapsedCpuTimer;
 import tools.KeyHandler;
 import tools.KeyInput;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 

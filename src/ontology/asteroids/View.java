@@ -4,8 +4,11 @@ import core.game.StateObservationMulti;
 import ontology.Constants;
 import ontology.Types;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Font;
+import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
 
 

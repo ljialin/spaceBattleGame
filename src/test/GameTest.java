@@ -3,15 +3,9 @@ package test;
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
-import jsweet.dom.HTMLElement;
 import ontology.Constants;
-import ontology.Types;
 import tools.ElapsedCpuTimer;
-import tools.MutableDouble;
 import tools.Utils;
-
-import static jsweet.dom.Globals.alert;
-import static jsweet.dom.Globals.document;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +13,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
+
 
 /**
  * Created by Jialin Liu on 05/10/2016.
@@ -43,7 +38,7 @@ public class GameTest {
   static String[] testedControllers = {
       "rotateAndShoot", "doNothing", "sampleRandom",
       "sampleOneStepLookAhead", "sampleGA", "sampleOLMCTS",
-      "sampleOLMCTStwoT", "sampleOLMCTShalfT"
+      "sampleOLMCTStwoT", "sampleOLMCTShalfT", "humanArrows"
   };
 
   public static void main(String[] args) {
@@ -97,10 +92,18 @@ public class GameTest {
 //      }
 //
 //    }
-	  alert("This example writes Hello world in the document!");
-		HTMLElement e = document.getElementById("target");
-		e.innerHTML = "Hello world!";
-    playOne(5, 2, true, 1);
+
+//    int[] params = { 4, 4, 1, 2, 5, 20}; //ValidParams.optimalParams50[33];
+//    int[] params = { 10, 5, 1, 1, 4, 20};
+    int[] params = { 10, 4, 1, 2, 5, 20};
+    Constants.SHIP_MAX_SPEED = params[0];
+    Constants.THRUST_SPEED = params[1];
+    Constants.MISSILE_COST = params[2];
+    Constants.MISSILE_MAX_SPEED = params[3];
+    Constants.MISSILE_COOLDOWN = params[4];
+    Constants.SHIP_RADIUS = params[5];
+
+    playOne(5, 0, true, 0);
 
 //    for(int j=0; j<1; j++) {
 //      int wins = 0;
@@ -242,7 +245,7 @@ public class GameTest {
       res[i][1] = game.getGameScore(0);
       res[i][2] = state1;
       res[i][3] = game.getGameScore(1);
-//      System.out.println(nbRuns + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] );
+      System.out.println(i + " " + res[i][0] + " " + res[i][1] + " " + res[i][2] + " " + res[i][3] );
 
     }
     double[] meanRes = Utils.meanArray(res);

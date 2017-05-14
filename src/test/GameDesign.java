@@ -36,6 +36,7 @@ public class GameDesign {
       {1, 60}  // RADIAN_UNIT
   };
 
+
   static int[][] initParams = {
       { 10, 3, 100, 7, 6, 50},
       { 10, 5, 0, 9, 6, 50},
@@ -156,12 +157,12 @@ public class GameDesign {
   }
 
 
-  public static double fitness(double var) {
+  public static double fitness(double _var) {
 //    double sqDist = (var-target)*(var-target);
 //    return (1 - sqDist/range);
 //    double dist = Math.abs(var - target);
 //    return (1 - dist/maxDist);
-    return var;
+    return _var;
   }
 
 }

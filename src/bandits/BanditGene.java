@@ -86,13 +86,13 @@ public class BanditGene {
         return true;
     }
 
-    public String statusString(int nEvals) {
-        return String.format("%d\t rescue: %.2f\t explore: %.2f\t urgency: %.2f",
-                x, rescue(), explore(nEvals), urgency(nEvals));
-    }
+//    public String statusString(int nEvals) {
+////        return String.format("%d\t rescue: %.2f\t explore: %.2f\t urgency: %.2f",
+////        x, rescue(), explore(nEvals), urgency(nEvals));
+//    }
 
     public int getX() {
-        return this.x;
+        return x;
     }
 
     public BanditGene copy() {

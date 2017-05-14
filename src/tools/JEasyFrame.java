@@ -1,7 +1,8 @@
 package tools;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Component;
+import java.awt.BorderLayout;
 
 /**
  * Created by Jialin Liu on 04/10/2016.

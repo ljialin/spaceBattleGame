@@ -4,7 +4,9 @@ import ontology.Constants;
 import ontology.Types;
 import tools.Vector2d;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Color;
+
 
 /**
  * Created by Jialin Liu on 04/10/2016.
