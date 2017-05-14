@@ -15,10 +15,9 @@ import java.util.Random;
  */
 public class RMHCTest {
   static SpaceBattleGameSearchSpace searchSpace = new SpaceBattleGameSearchSpace();
-  static int budget = 10000;
+  static int budget = 2000;
 
   public static void main(String[] args) {
-
     Random rdm = new Random();
 
     int[] params = new int[searchSpace.nDims()];
@@ -91,6 +90,12 @@ public class RMHCTest {
         str += " " + params[i];
       }
       System.out.println(str);
+//
+//      System.out.println("Total: " + (int) (Runtime.getRuntime().totalMemory() / 1024));
+//      System.out.println("Free: " + (int) (Runtime.getRuntime().freeMemory() / 1024));
+//      System.out.println("Max: " + (int) (Runtime.getRuntime().maxMemory() / 1024));
+//      System.out.println("Diff: " + (int) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024);
+
 
     }
   }

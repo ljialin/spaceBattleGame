@@ -1,6 +1,6 @@
 package core.game;
 
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+//import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import competition.CompetitionParameters;
 import core.player.AbstractMultiPlayer;
 import core.termination.Termination;
@@ -648,5 +648,9 @@ public class StateObservationMulti {
 
   public int getAvatarLives(int playerId) {
     return this.avatars[playerId].getHealthPoints();
+  }
+
+  public double[][] getScoreRecord() {
+    return this.scoreRecord;
   }
 }

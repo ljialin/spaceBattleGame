@@ -3,11 +3,15 @@ package test;
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
+import jsweet.dom.HTMLElement;
 import ontology.Constants;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.MutableDouble;
 import tools.Utils;
+
+import static jsweet.dom.Globals.alert;
+import static jsweet.dom.Globals.document;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -93,8 +97,10 @@ public class GameTest {
 //      }
 //
 //    }
-
-    playOne(5, 0, true, 0);
+	  alert("This example writes Hello world in the document!");
+		HTMLElement e = document.getElementById("target");
+		e.innerHTML = "Hello world!";
+    playOne(5, 2, true, 1);
 
 //    for(int j=0; j<1; j++) {
 //      int wins = 0;
@@ -216,6 +222,10 @@ public class GameTest {
         game.cheating = -1;
       }
       game.playGame(players, rdm.nextInt());
+
+      if(game.getScoreRecord() == null) {
+        System.out.println("OH ! no score record, great! ");
+      }
       double state0;
       double state1;
       if (game.getGameScore(0) > game.getGameScore(1)) {
