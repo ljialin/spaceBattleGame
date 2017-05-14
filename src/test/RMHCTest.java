@@ -1,8 +1,5 @@
 package test;
 
-import tools.ElapsedCpuTimer;
-import tools.Utils;
-
 import java.util.Random;
 
 /**
@@ -58,7 +55,8 @@ public class RMHCTest {
     System.out.println(str);
 
     while (t < T) {
-
+      /** reproduction and mutation */
+      // TODO: 14/05/17 Here to edit to implement a (1+1)-EA 
       int[] mutatedParams = params;
       int mutatedIdx = rdm.nextInt(params.length);
       int mutatedValue = searchSpace.getRandomValue(mutatedIdx);
@@ -74,6 +72,7 @@ public class RMHCTest {
       bestSoFarPoints = (res[1] + bestSoFarPoints*buffer) / (buffer+1);
       bestSoFar = (res[0] + bestSoFar*buffer) / (buffer+1);
       bestSoFarFit = GameDesign.fitness(bestSoFar);
+      /** compare and select */ 
       if(newFitness >= bestSoFarFit) {
         params = mutatedParams;
         bestSoFar = newWinRate;
