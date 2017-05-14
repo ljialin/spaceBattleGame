@@ -65,5 +65,8 @@ public class SampleLogger implements FullGameLogger {
         System.out.println(player1Positions.frequencyReport());
         System.out.format("Normalised entropy: %.5f\n ", player1Positions.normalisedEntropy(nGridCells));
         System.out.println();
+
+        System.out.println("Just to demonstrate that all actions recorded are available: ");
+        System.out.println(player1Actions.actions);
     }
 }
