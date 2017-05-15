@@ -1,4 +1,4 @@
-package controllers.labMCTS.sampleOLMCTS;
+package controllers.labMCTS;
 
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
@@ -14,6 +14,7 @@ import java.util.Random;
  * TODO: 16/05/17 Exercise Lab MCTS (1): Read the code. Do you understand what's happening in this class?
  */
 public class Agent extends AbstractMultiPlayer {
+
 
   // A few needed variables.
   public static int[] NUM_ACTIONS;

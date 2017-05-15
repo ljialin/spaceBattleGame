@@ -1,4 +1,4 @@
-package controllers.labMCTS.sampleOLMCTS;
+package controllers.labMCTS;
 
 import core.game.StateObservationMulti;
 import tools.ElapsedCpuTimer;
@@ -11,6 +11,7 @@ import java.util.Random;
  */
 public class SingleMCTSPlayer
 {
+
   /**
    * Root of the tree.
    */

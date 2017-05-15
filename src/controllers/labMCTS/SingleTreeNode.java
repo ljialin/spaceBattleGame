@@ -1,4 +1,4 @@
-package controllers.labMCTS.sampleOLMCTS;
+package controllers.labMCTS;
 
 import controllers.multiPlayer.heuristics.Heuristics;
 import core.game.StateObservationMulti;
@@ -67,6 +67,7 @@ public class SingleTreeNode
 
     //TODO: 16/05/17 Exercise Lab MCTS (4): Read the code. Do you understand what's happening on each iteration?
     while(numIters < Agent.MCTS_ITERATIONS){
+
       //On each iteration, we make a copy of the state.
       StateObservationMulti state = rootState.copy();
 
@@ -97,16 +98,9 @@ public class SingleTreeNode
     //Keep going down the tree until depth reached or game is over
     while (!state.isGameOver() && cur.m_depth < Agent.ROLLOUT_DEPTH)
     {
+        //TODO: 16/05/17 Exercise Lab MCTS (5): Tree policy: Determine if you need to EXPAND or Navigate the tree using UCT
 
-      if (cur.notFullyExpanded()) {
-        //We reached a node where all children have not been explored. Need to Expand.
-        return cur.expand(state);
-
-      } else {
-        //Keep going down using UCT to select the next node to pick
-        SingleTreeNode next = cur.uct(state);
-        cur = next;
-      }
+        //...
     }
 
     return cur;
@@ -161,49 +155,50 @@ public class SingleTreeNode
     double bestValue = -Double.MAX_VALUE;
     for (SingleTreeNode child : this.children)
     {
-      //EXPLOITATION term: average of rewards, normalized within the bounds so it's in [0,1]
-      double hvVal = child.totValue;
-      double exploitation =  hvVal / (child.nVisits + epsilon);
-      exploitation = Utils.normalise(exploitation, bounds[0], bounds[1]);
+        //TODO: 16/05/17 Exercise Lab MCTS (6): Build the UCB1 value for each one of these children.
+        // 1. EXPLOITATION term: average of rewards, normalized within the bounds so it's in [0,1]
+        double exploitation = 0.0; // --- FILL HERE ---
+        exploitation = Utils.normalise(exploitation, bounds[0], bounds[1]);
 
-      //EXPLORATION term: to value highly states rarely visited
-      double exploration = Math.sqrt(Math.log(this.nVisits + 1) / (child.nVisits + epsilon));
+        //2. EXPLORATION term: to value highly states rarely visited
+        double exploration = 0.0; // --- FILL HERE ---
 
-      //UCB1 Equation build up.
-      double uctValue = exploitation + Agent.K * exploration;
+        //UCB1 Equation build up.
+        double uctValue = exploitation + Agent.K * exploration;
 
-      //This allows breaking ties randomly
-      uctValue = Utils.noise(uctValue, epsilon, m_rnd.nextDouble());
+        //This allows breaking ties randomly
+        uctValue = Utils.noise(uctValue, epsilon, m_rnd.nextDouble());
 
-      //We need to keep the highest UCB1 value.
-      if (uctValue > bestValue) {
-        selected = child;
-        bestValue = uctValue;
-      }
-    }
-    if (selected == null)
-    {
-      //Uh oh... this shouldn't happen.
-      throw new RuntimeException("Warning! returning null: " + bestValue + " : " + this.children.length + " " +
-          + bounds[0] + " " + bounds[1]);
+        //We need to keep the highest UCB1 value.
+        if (uctValue > bestValue) {
+            selected = child;
+            bestValue = uctValue;
+        }
     }
 
+        if (selected == null)
+        {
+            //Uh oh... this shouldn't happen.
+            throw new RuntimeException("Warning! returning null: " + bestValue + " : " + this.children.length + " " +
+              + bounds[0] + " " + bounds[1]);
+        }
 
-    //need to provide actions for all players to advance the forward model
-    Types.ACTIONS[] acts = new Types.ACTIONS[Agent.no_players];
 
-    //set this agent's action
-    acts[Agent.id] = Agent.actions[Agent.id][selected.childIdx];
+        //need to provide actions for all players to advance the forward model
+        Types.ACTIONS[] acts = new Types.ACTIONS[Agent.no_players];
 
-    //get actions available to the opponent and assume they will do a random action
-    Types.ACTIONS[] oppActions = Agent.actions[Agent.oppID];
-    acts[Agent.oppID] = oppActions[new Random().nextInt(oppActions.length)];
+        //set this agent's action
+        acts[Agent.id] = Agent.actions[Agent.id][selected.childIdx];
 
-    //Roll the state forward with the actions selected
-    state.advance(acts);
+        //get actions available to the opponent and assume they will do a random action
+        Types.ACTIONS[] oppActions = Agent.actions[Agent.oppID];
+        acts[Agent.oppID] = oppActions[new Random().nextInt(oppActions.length)];
 
-    //Return the selected node.
-    return selected;
+        //Roll the state forward with the actions selected
+        state.advance(acts);
+
+        //Return the selected node.
+        return selected;
   }
 
   /**
@@ -218,15 +213,14 @@ public class SingleTreeNode
     //Check that we don't have to finish the rollout.
     while (!finishRollout(state,thisDepth)) {
 
-      //Random move for all players
-      Types.ACTIONS[] acts = new Types.ACTIONS[Agent.no_players];
-      for (int i = 0; i < Agent.no_players; i++) {
-        acts[i] = Agent.actions[i][m_rnd.nextInt(Agent.NUM_ACTIONS[i])];
-      }
+        //TODO: 16/05/17 Exercise Lab MCTS (7): Execute one random move forward (note that the opponent(s) has to move as well!)
+        //1. Random move for all players
+        // ...
 
-      //Roll the state forward
-      state.advance(acts);
-      thisDepth++;
+        //2. Roll the state forward
+        // ...
+
+        thisDepth++;
     }
 
     //Reached the end of the rollout, we need to retrieve the value of the state.
@@ -272,14 +266,13 @@ public class SingleTreeNode
    * @return Value for this state
    */
   public double myHeuristicScore(StateObservationMulti a_gameState) {
-    //This is the normal game score
-    double rawScore = a_gameState.getGameScore(Agent.id);
+      //This is the normal game score
+      double rawScore = a_gameState.getGameScore(Agent.id);
 
-    //What about some extra score based on the distance between the players?
-    double distScore = Heuristics.calcDistScore(
-        a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1- Agent.id]);
+      //TODO: 16/05/17 Exercise Lab MCTS (8): Open: what would you add to the score to make your AI stronger.
+      /// rawScore += ?;
 
-    return rawScore;
+      return rawScore;
   }
 
 
