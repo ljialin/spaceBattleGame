@@ -36,10 +36,12 @@ public class GameTest {
   static String GAController = "sampleGA";
   static String rotateAndShootController = "rotateAndShoot";
 
+  static String labMCTS = "labMCTS";
+
   static String[] testedControllers = {
       "rotateAndShoot", "doNothing", "sampleRandom",
       "sampleOneStepLookAhead", "sampleGA", "sampleOLMCTS",
-      "sampleOLMCTStwoT", "sampleOLMCTShalfT", "humanArrows"
+      "sampleOLMCTStwoT", "sampleOLMCTShalfT", "humanArrows", "labMCTS"
   };
 
   public static void main(String[] args) {
@@ -103,7 +105,7 @@ public class GameTest {
     Constants.MISSILE_COOLDOWN = params[4];
     Constants.SHIP_RADIUS = params[5];
 
-    playOne(5, 0, true, 0);
+    playOne(9, 0, true, 1);
 
 //    for(int j=0; j<1; j++) {
 //      int wins = 0;

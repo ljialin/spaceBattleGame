@@ -101,6 +101,9 @@ public class SingleTreeNode
         //TODO: 16/05/17 Exercise Lab MCTS (5): Tree policy: Determine if you need to EXPAND or Navigate the tree using UCT
 
         //...
+
+        //DELETE THIS LINE WHEN YOU START WORKING ON THIS TO-DO (it's here so there's no infinite loop when running the incomplete version of this controller).
+        return cur;
     }
 
     return cur;
@@ -223,8 +226,7 @@ public class SingleTreeNode
 
 
         //TODO: 16/05/17 Exercise Lab MCTS (9): Can you think of a way to bias the rollouts so MCTS explores other parts of the search space?
-
-
+        
 
         thisDepth++;
     }
@@ -275,7 +277,7 @@ public class SingleTreeNode
       //This is the normal game score
       double rawScore = a_gameState.getGameScore(Agent.id);
 
-      //TODO: 16/05/17 Exercise Lab MCTS (8): Open: what would you add to the score to make your AI stronger.
+      //TODO: 16/05/17 Exercise Lab MCTS (8): Open: what would you add to the score to make your AI stronger?
       /// rawScore += ?;
 
       return rawScore;
