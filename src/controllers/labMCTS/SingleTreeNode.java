@@ -220,6 +220,12 @@ public class SingleTreeNode
         //2. Roll the state forward
         // ...
 
+
+
+        //TODO: 16/05/17 Exercise Lab MCTS (9): Can you think of a way to bias the rollouts so MCTS explores other parts of the search space?
+
+
+
         thisDepth++;
     }
 
