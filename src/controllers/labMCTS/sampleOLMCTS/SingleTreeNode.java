@@ -1,5 +1,4 @@
-package controllers.sampleOLMCTS;
-
+package controllers.labMCTS.sampleOLMCTS;
 
 import controllers.multiPlayer.heuristics.Heuristics;
 import core.game.StateObservationMulti;
@@ -11,6 +10,7 @@ import java.util.Random;
 
 /**
  * Class for a tree node.
+ * TODO: 16/05/17 Exercise Lab MCTS (3): Read the code. Do you understand what's happening in this class?
  */
 public class SingleTreeNode
 {
@@ -65,6 +65,7 @@ public class SingleTreeNode
 
     int numIters = 0;
 
+    //TODO: 16/05/17 Exercise Lab MCTS (4): Read the code. Do you understand what's happening on each iteration?
     while(numIters < Agent.MCTS_ITERATIONS){
       //On each iteration, we make a copy of the state.
       StateObservationMulti state = rootState.copy();
@@ -184,7 +185,7 @@ public class SingleTreeNode
     {
       //Uh oh... this shouldn't happen.
       throw new RuntimeException("Warning! returning null: " + bestValue + " : " + this.children.length + " " +
-              + bounds[0] + " " + bounds[1]);
+          + bounds[0] + " " + bounds[1]);
     }
 
 
@@ -276,7 +277,7 @@ public class SingleTreeNode
 
     //What about some extra score based on the distance between the players?
     double distScore = Heuristics.calcDistScore(
-            a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1- Agent.id]);
+        a_gameState.getAvatars()[Agent.id], a_gameState.getAvatars()[1- Agent.id]);
 
     return rawScore;
   }

@@ -25,7 +25,6 @@ public class BanditEAWithProba extends BanditEA {
 
     @Override
     public ArrayList<BanditGene> selectGeneToMutate(int evalsSoFar) {
-        // TODO
         double sum = updateUrgency(evalsSoFar);
         ArrayList<BanditGene> selectedGenes = new ArrayList<>();
         // ArrayList<BanditGene> mutatedGenome = new ArrayList<>();

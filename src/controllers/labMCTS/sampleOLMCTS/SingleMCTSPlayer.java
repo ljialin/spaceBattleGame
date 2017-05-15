@@ -1,5 +1,4 @@
-package controllers.sampleOLMCTS;
-
+package controllers.labMCTS.sampleOLMCTS;
 
 import core.game.StateObservationMulti;
 import tools.ElapsedCpuTimer;
@@ -8,6 +7,7 @@ import java.util.Random;
 
 /**
  * A player that implements MCTS. It simply has a reference to the node at the root.
+ * TODO: 16/05/17 Exercise Lab MCTS (2): Read the code. Do you understand what's happening in this class?
  */
 public class SingleMCTSPlayer
 {
