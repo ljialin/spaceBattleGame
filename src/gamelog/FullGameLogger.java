@@ -11,4 +11,6 @@ public interface FullGameLogger {
     public void log(StateObservationMulti gameState, Types.ACTIONS[] actions);
     public void printReport();
 
+    void showPositionalHeatMap();
+
 }

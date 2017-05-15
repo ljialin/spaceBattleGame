@@ -2,6 +2,8 @@ package gamelog;
 
 import core.game.StateObservationMulti;
 import ontology.Types;
+import tools.HeatMap;
+import tools.JEasyFrame;
 import tools.Vector2d;
 
 /**
@@ -52,6 +54,10 @@ public class SampleLogger implements FullGameLogger {
         int py = (int) (y / gridSize);
 
         return px + py * nCellsWide;
+    }
+
+    public void showPositionalHeatMap() {
+        new JEasyFrame(new HeatMap(player1Positions.pVec(), nCellsWide), "Positional Heat Map");
     }
 
     public void printReport() {

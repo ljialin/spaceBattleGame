@@ -34,6 +34,7 @@ public class GameEntropyLogTest {
         double[] x = playNAndMean(3, p1, p2);
         System.out.println(Arrays.toString(x));
         StateObservationMulti.gameLogger.printReport();
+        StateObservationMulti.gameLogger.showPositionalHeatMap();
 
     }
 }
