@@ -16,6 +16,7 @@ public class GameEntropyLogTest {
     public static void main(String[] args) {
         // todo: Play with different parameter values to observe effects on entropy
         // todo: How does entropy also vary depending on the players?
+        // todo: Add in more features to monitor in the SampleLogger class
 
         // note: could set these up directly
         int[] params = {5, 4, 1, 2, 5, 20};
@@ -33,6 +34,7 @@ public class GameEntropyLogTest {
         double[] x = playNAndMean(3, p1, p2);
         System.out.println(Arrays.toString(x));
         StateObservationMulti.gameLogger.printReport();
+
     }
 }
 
