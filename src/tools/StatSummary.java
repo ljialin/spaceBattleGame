@@ -97,8 +97,8 @@ public class StatSummary {
       }
       // System.out.println("Num = " + num);
       sd = Math.sqrt(num / (n - 1));
-      // System.out.println(" Test: sd = " + sd);
-      // System.out.println(" Test: n = " + n);
+      // System.out.println(" SinglePlayerTest: sd = " + sd);
+      // System.out.println(" SinglePlayerTest: n = " + n);
       valid = true;
     }
   }

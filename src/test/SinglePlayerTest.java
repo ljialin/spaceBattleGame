@@ -1,10 +1,9 @@
-package controllers.singlePlayer;
+package test;
 
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
 import core.player.AbstractPlayer;
 import ontology.Constants;
-import test.GameTest;
 
 import java.util.Random;
 
@@ -12,7 +11,7 @@ import java.util.Random;
  * Created with IntelliJ IDEA. User: Diego Date: 04/10/13 Time: 16:29 This is a
  * Java port from Tom Schaul's VGDL - https://github.com/schaul/py-vgdl
  */
-public class Test {
+public class SinglePlayerTest {
 
 	static String mctsController = "controllers.singlePlayer.advanced.sampleMCTS";
 

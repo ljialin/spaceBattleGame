@@ -104,7 +104,7 @@ public class GameTest {
         Constants.MISSILE_COOLDOWN = params[4];
         Constants.SHIP_RADIUS = params[5];
 
-        playOne(0, 2, false, 0);
+        playOne(6, 7, true, 0);
 
         // now print out the entropy log
 
