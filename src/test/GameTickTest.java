@@ -21,7 +21,7 @@ public class GameTickTest {
 
             StateObservationMulti game = new StateObservationMulti(false);
 
-            controllers.sampleRandom.Agent randomAgent = new controllers.sampleRandom.Agent(game, null, 0);
+            controllers.multiPlayer.sampleRandom.Agent randomAgent = new controllers.multiPlayer.sampleRandom.Agent(game, null, 0);
 
             // do not need separate agents for player one and plater 2
             // since actions are simply random

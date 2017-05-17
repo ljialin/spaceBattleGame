@@ -1,7 +1,7 @@
-package controllers.rotateAndShoot;
+package controllers.singlePlayer.rotateAndShoot;
 
 import core.game.StateObservationMulti;
-import core.player.AbstractMultiPlayer;
+import core.player.AbstractPlayer;
 import ontology.Constants;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
@@ -14,7 +14,7 @@ import tools.ElapsedCpuTimer;
  * Respect to Google Java Style Guide:
  * https://google.github.io/styleguide/javaguide.html
  */
-public class Agent extends AbstractMultiPlayer {
+public class Agent extends AbstractPlayer {
 
   int id; //this player's ID
   int cooldown;

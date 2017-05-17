@@ -3,10 +3,8 @@ package core.player;
 import core.game.StateObservationMulti;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
-import tools.KeyHandler;
-import tools.KeyInput;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 

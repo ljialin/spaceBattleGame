@@ -3,7 +3,7 @@ package test;
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
-import gamelog.GameLogger;
+import core.player.AbstractPlayer;
 import ontology.Constants;
 import tools.ElapsedCpuTimer;
 import tools.Utils;
@@ -145,8 +145,8 @@ public class GameTest {
         AbstractMultiPlayer[] players = new AbstractMultiPlayer[2];
         String p1 = testedControllers[id1];
         String p2 = testedControllers[id2];
-        players[0] = createMultiPlayer("controllers." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
-        players[1] = createMultiPlayer("controllers." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
+        players[0] = createMultiPlayer("controllers.multiPlayer." + p1 + ".Agent", game, rdm.nextInt(), 0, false);
+        players[1] = createMultiPlayer("controllers.multiPlayer." + p2 + ".Agent", game, rdm.nextInt(), 1, false);
 
         if (id1 == 0) {
             game.cheating = 0;
@@ -321,13 +321,13 @@ public class GameTest {
             int playerID, StateObservationMulti so) {
         ElapsedCpuTimer ect = new ElapsedCpuTimer(CompetitionParameters.TIMER_TYPE);
         ect.setMaxTimeMillis(CompetitionParameters.INITIALIZATION_TIME);
-        AbstractMultiPlayer abstractMultiPlayer = new controllers.sampleOLMCTS.Agent(so.copy(), ect.copy(), playerID);
+        AbstractMultiPlayer abstractMultiPlayer = new controllers.multiPlayer.sampleOLMCTS.Agent(so.copy(), ect.copy(), playerID);
         return abstractMultiPlayer;
     }
 
-    private static AbstractMultiPlayer createMultiPlayer(
-            String playerName, StateObservationMulti so,
-            int randomSeed, int id, boolean isHuman) {
+    public static AbstractMultiPlayer createMultiPlayer(
+        String playerName, StateObservationMulti so,
+        int randomSeed, int id, boolean isHuman) {
         AbstractMultiPlayer player = null;
 
         try {
@@ -417,5 +417,98 @@ public class GameTest {
         }
 
         return abstractMultiPlayer;
+    }
+
+    public static AbstractPlayer createSinglePlayer(
+        String playerName, StateObservationMulti so,
+        int randomSeed, int id, boolean isHuman) {
+        AbstractPlayer player = null;
+
+        try {
+            //create the controller.
+            player = (AbstractPlayer) createSingleController(playerName, id, so);
+            if (player != null) {
+                player.setup(randomSeed, isHuman);
+            }
+
+        } catch (Exception e) {
+            //This probably happens because controller took too much time to be created.
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return player;
+    }
+
+    protected static AbstractPlayer createSingleController(String playerName, int playerID,
+                                                     StateObservationMulti so) throws RuntimeException {
+        AbstractPlayer abstractPlayer = null;
+        try {
+            //Determine the time due for the controller creation.
+            ElapsedCpuTimer ect = new ElapsedCpuTimer(CompetitionParameters.TIMER_TYPE);
+            ect.setMaxTimeMillis(CompetitionParameters.INITIALIZATION_TIME);
+            if (so.no_players < 2) { //single player
+                //Get the class and the constructor with arguments (StateObservation, long).
+                Class<? extends AbstractPlayer> controllerClass = Class.forName(playerName).asSubclass(AbstractPlayer.class);
+                Class[] gameArgClass = new Class[]{StateObservationMulti.class, ElapsedCpuTimer.class};
+                Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
+
+                //Call the constructor with the appropriate parameters.
+                Object[] constructorArgs = new Object[]{so, ect.copy()};
+
+                abstractPlayer = (AbstractPlayer) controllerArgsConstructor.newInstance(constructorArgs);
+                abstractPlayer.setPlayerID(playerID);
+
+            } else { //multi player
+                //Get the class and the constructor with arguments (StateObservation, long, int).
+                Class<? extends AbstractPlayer> controllerClass = Class.forName(playerName).asSubclass(AbstractPlayer.class);
+                Class[] gameArgClass = new Class[]{StateObservationMulti.class, ElapsedCpuTimer.class, int.class};
+                Constructor controllerArgsConstructor = controllerClass.getConstructor(gameArgClass);
+
+                //Call the constructor with the appropriate parameters.
+                Object[] constructorArgs = new Object[]{(StateObservationMulti) so.copy(), ect.copy(), playerID};
+
+                abstractPlayer = (AbstractPlayer) controllerArgsConstructor.newInstance(constructorArgs);
+                abstractPlayer.setPlayerID(playerID);
+            }
+            //Check if we returned on time, and act in consequence.
+            long timeTaken = ect.elapsedMillis();
+            if (ect.exceededMaxTime()) {
+                long exceeded = -ect.remainingTimeMillis();
+//        System.out.println("Controller initialization time out (" + exceeded + ").");
+
+                return null;
+            } else {
+//        System.out.println("Controller initialization time: " + timeTaken + " ms.");
+            }
+
+            //This code can throw many exceptions (no time related):
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            System.err.println("Constructor " + playerName + "(StateObservation,long) not found in controller class:");
+            System.exit(1);
+
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class " + playerName + " not found for the controller:");
+            e.printStackTrace();
+            System.exit(1);
+
+        } catch (InstantiationException e) {
+            System.err.println("Exception instantiating " + playerName + ":");
+            e.printStackTrace();
+            System.exit(1);
+
+        } catch (IllegalAccessException e) {
+            System.err.println("Illegal access exception when instantiating " + playerName + ":");
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InvocationTargetException e) {
+            System.err.println("Exception calling the constructor " + playerName + "(StateObservation,long):");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return abstractPlayer;
     }
 }

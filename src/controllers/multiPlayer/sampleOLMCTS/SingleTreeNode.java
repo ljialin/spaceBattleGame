@@ -1,4 +1,4 @@
-package controllers.sampleOLMCTS;
+package controllers.multiPlayer.sampleOLMCTS;
 
 import java.util.Random;
 

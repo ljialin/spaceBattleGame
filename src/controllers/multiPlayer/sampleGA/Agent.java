@@ -1,7 +1,6 @@
-package controllers.sampleGA;
+package controllers.multiPlayer.sampleGA;
 
 import java.awt.Graphics2D;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;

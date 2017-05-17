@@ -1,4 +1,4 @@
-package controllers.sampleOLMCTShalfT;
+package controllers.multiPlayer.sampleOLMCTStwoT;
 
 import controllers.multiPlayer.heuristics.Heuristics;
 import core.game.StateObservationMulti;

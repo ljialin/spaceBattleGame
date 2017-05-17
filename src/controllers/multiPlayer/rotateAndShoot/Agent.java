@@ -1,16 +1,23 @@
-package controllers.sampleRandom;
+package controllers.multiPlayer.rotateAndShoot;
 
 import core.game.StateObservationMulti;
 import core.player.AbstractMultiPlayer;
+import ontology.Constants;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 
-import java.util.ArrayList;
-import java.util.Random;
-
+/**
+ * Created by Jialin Liu on 11/10/2016.
+ * CSEE, University of Essex, UK
+ * Email: jialin.liu@essex.ac.uk
+ * <p>
+ * Respect to Google Java Style Guide:
+ * https://google.github.io/styleguide/javaguide.html
+ */
 public class Agent extends AbstractMultiPlayer {
 
   int id; //this player's ID
+  int cooldown;
 
   /**
    * initialize all variables for the agent
@@ -20,6 +27,8 @@ public class Agent extends AbstractMultiPlayer {
    */
   public Agent(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer, int playerID){
     id = playerID;
+    cooldown = Constants.MISSILE_COOLDOWN;
+    // now cheat
   }
 
   /**
@@ -30,7 +39,12 @@ public class Agent extends AbstractMultiPlayer {
    */
   @Override
   public Types.ACTIONS act(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer) {
-    ArrayList<Types.ACTIONS> a = stateObs.getAvailableActions(id);
-    return Types.ACTIONS.values()[new Random().nextInt(a.size())];
+    if (cooldown==0) {
+      cooldown = Constants.MISSILE_COOLDOWN;
+      return Types.ACTIONS.ACTION_FIRE;
+    } else {
+      cooldown--;
+      return Types.ACTIONS.ACTION_LEFT;
+    }
   }
 }

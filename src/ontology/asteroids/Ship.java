@@ -205,6 +205,10 @@ public class Ship extends GameObject {
     return false;
   }
 
+  public boolean canFireWeapon() {
+    return canFireWeapon(Constants.WEAPON_ID_MISSILE);
+  }
+
   public void kill() {
     this.nbKills++;
   }

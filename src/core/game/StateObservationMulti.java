@@ -374,6 +374,23 @@ public class StateObservationMulti {
         }
     }
 
+    /** play with RAS */
+    public void advance(Types.ACTIONS action) {
+        Types.ACTIONS[] actions = new Types.ACTIONS[no_players];
+        actions[0] = action;
+        Types.ACTIONS otherAction;
+        if (this.gameTick%Constants.MISSILE_COOLDOWN==0)
+
+        for (int i=1;i<no_players; i++) {
+            if (this.avatars[i].canFireWeapon()) {
+                actions[i] = Types.ACTIONS.ACTION_FIRE;
+            } else {
+                actions[i] = Types.ACTIONS.ACTION_LEFT;
+            }
+        }
+        advance(actions);
+    }
+
     protected void removeDead() {
         for (int i = objects.size() - 1; i >= 0; i--) {
             GameObject ob = objects.get(i);
@@ -521,6 +538,11 @@ public class StateObservationMulti {
         return Types.AVAILABLE_ACTIONS;
     }
 
+    public ArrayList<Types.ACTIONS> getAvailableActions() {
+        return Types.AVAILABLE_ACTIONS;
+    }
+
+
     protected void waitTillReady() {
         if (visible) {
             while (!view.ready) {
@@ -636,6 +658,11 @@ public class StateObservationMulti {
             winners[i] = avatars[i].getWinState();
         }
         return winners;
+    }
+
+    public Types.WINNER getGameWinner() {
+        checkWinner();
+        return avatars[0].getWinState();
     }
 
     public Vector2d getAvatarPosition(int playerId) {

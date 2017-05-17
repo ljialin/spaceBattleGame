@@ -1,4 +1,4 @@
-package controllers.sampleOLMCTStwoT;
+package controllers.multiPlayer.sampleOLMCTShalfT;
 
 import competition.CompetitionParameters;
 import core.game.StateObservationMulti;
@@ -19,7 +19,7 @@ import java.util.Random;
 public class Agent extends AbstractMultiPlayer {
 
   public static int[] NUM_ACTIONS;
-  public static int MCTS_ITERATIONS = CompetitionParameters.MCTS_ITER*2;
+  public static int MCTS_ITERATIONS = (int) CompetitionParameters.MCTS_ITER/2;
   public static int ROLLOUT_DEPTH = 10;
   public static double K = Math.sqrt(2);
   public static double REWARD_DISCOUNT = 1.00;
@@ -74,6 +74,7 @@ public class Agent extends AbstractMultiPlayer {
    * @return An action for the current state
    */
   public Types.ACTIONS act(StateObservationMulti stateObs, ElapsedCpuTimer elapsedTimer) {
+
     //Set the state observation object as the new root of the tree.
     mctsPlayer.init(stateObs);
 

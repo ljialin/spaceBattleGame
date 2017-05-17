@@ -1,4 +1,4 @@
-package controllers.sampleOneStepLookAhead;
+package controllers.multiPlayer.sampleOneStepLookAhead;
 
 import controllers.multiPlayer.heuristics.SimpleStateHeuristic;
 import core.game.StateObservationMulti;

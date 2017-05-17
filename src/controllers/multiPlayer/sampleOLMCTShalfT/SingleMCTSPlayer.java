@@ -1,4 +1,4 @@
-package controllers.sampleOLMCTStwoT;
+package controllers.multiPlayer.sampleOLMCTShalfT;
 
 import core.game.StateObservationMulti;
 import tools.ElapsedCpuTimer;

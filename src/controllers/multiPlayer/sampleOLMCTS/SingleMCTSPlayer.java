@@ -1,9 +1,9 @@
-package controllers.sampleOLMCTShalfT;
+package controllers.multiPlayer.sampleOLMCTS;
+
+import java.util.Random;
 
 import core.game.StateObservationMulti;
 import tools.ElapsedCpuTimer;
-
-import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
