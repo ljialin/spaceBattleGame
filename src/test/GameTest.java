@@ -106,6 +106,7 @@ public class GameTest {
 
         playOne(6, 7, true, 0);
 
+
         // now print out the entropy log
 
 //    for(int j=0; j<1; j++) {
