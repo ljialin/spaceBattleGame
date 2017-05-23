@@ -13,7 +13,7 @@ public class Constants {
   public static double THRUST_SPEED = 5; // to optimise, id=3
   public static int MISSILE_COST = 1; // to optimise, id=4
   public static int MISSILE_MAX_SPEED = 1; // to optimise, id=7
-  public static int MISSILE_COOLDOWN = 4; // to optimise, id=8
+  public static int MISSILE_COOLDOWN = 7; // to optimise, id=8
   public static int SHIP_RADIUS = 20; // to optimise, id=1
 
   public static int KILL_AWARD = 100; // to optimise, id=11
@@ -26,7 +26,7 @@ public class Constants {
   public static final int WEAPON_ID_MISSILE = 1;
   public static final int MISSILE_MAX_RESOURCE = 1000000;
   public static  double MISSILE_RADIUS = 4; // to optimise, id=5
-  public static  int MISSILE_MAX_TTL = 30; // to optimise, id=6
+  public static  int MISSILE_MAX_TTL = 100; // to optimise, id=6
   public static final int MISSILE_DESTRUCTIVE_POWER = 1;
 
   public static final double GRAVITY = 0;

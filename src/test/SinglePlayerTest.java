@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class SinglePlayerTest {
 
-	static String mctsController = "controllers.singlePlayer.advanced.sampleMCTS";
+	static String mctsController = "controllers.singlePlayer.advanced.nestedMC";
 
 
     public static void main(String[] args) {

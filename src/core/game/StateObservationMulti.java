@@ -3,32 +3,21 @@ package core.game;
 import competition.CompetitionParameters;
 import core.player.AbstractMultiPlayer;
 import core.termination.Termination;
-import gamelog.EntropyLogger;
 import gamelog.FullGameLogger;
 import gamelog.SampleLogger;
 import ontology.Constants;
 import ontology.Types;
-import ontology.asteroids.Ship;
 import ontology.asteroids.GameObject;
-import ontology.asteroids.View;
-
 import ontology.asteroids.Missile;
-
+import ontology.asteroids.Ship;
+import ontology.asteroids.View;
 import tools.ElapsedCpuTimer;
 import tools.JEasyFrame;
 import tools.Vector2d;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-
-
+import java.awt.*;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -189,6 +178,15 @@ public class StateObservationMulti {
 //      System.out.println("Ship id " + this.avatars[i].getPlayerId() + " is created at ("
 //          + this.avatars[i].getPosition().x + "," + this.avatars[i].getPosition().y + ")");
         }
+
+//        Vector2d pos = new Vector2d(0, 0);
+//        Vector2d dir = new Vector2d(0,0);
+//        this.avatars[0] = new Ship(pos, dir, 0);
+//
+//
+//        Vector2d pos2 = new Vector2d(0,0);
+//        Vector2d dir2 = new Vector2d(0,0);
+//        this.avatars[1] = new Ship(pos2, dir2, 1);
     }
 
     /**
